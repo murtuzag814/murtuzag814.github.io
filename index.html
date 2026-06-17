@@ -497,6 +497,92 @@
     .contact-card { grid-template-columns: 1fr; gap: 2rem; padding: 2rem; }
     footer { flex-direction: column; gap: 0.5rem; text-align: center; }
   }
+
+    /* POSTS SECTION — Auto-Post System */
+  .posts-grid { display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2rem; }
+
+  .post-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+  }
+  .post-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(10,10,15,0.08);
+  }
+  .post-card:has(.post-img-wrap:empty),
+  .post-card:not(:has(.post-img-wrap)) {
+    grid-template-columns: 1fr;
+  }
+  .post-img-wrap {
+    height: 100%;
+    min-height: 220px;
+    overflow: hidden;
+    background: var(--surface-2);
+  }
+  .post-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .post-content {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .post-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .post-date {
+    font-size: 0.82rem;
+    color: var(--ink-3);
+    font-weight: 400;
+  }
+  .post-body {
+    font-size: 0.92rem;
+    color: var(--ink-2);
+    line-height: 1.8;
+  }
+  .post-body a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .post-body a:hover { color: var(--ink); }
+  .post-body strong { color: var(--ink); font-weight: 600; }
+  .post-body em { color: var(--ink-2); }
+
+  .posts-view-all {
+    text-align: center;
+    margin-top: 1rem;
+  }
+  .btn-secondary {
+    background: transparent; color: var(--ink);
+    padding: 0.75rem 1.75rem; border-radius: 100px;
+    border: 1.5px solid var(--border);
+    font-size: 0.88rem; font-weight: 500; text-decoration: none;
+    transition: all 0.25s; display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-secondary:hover { border-color: var(--ink); transform: translateY(-2px); }
+
+  @media (max-width: 768px) {
+    .post-card { grid-template-columns: 1fr !important; }
+    .post-img-wrap { max-height: 240px; }
+    .post-content { padding: 1.5rem; }
+  }
+  
 </style>
 </head>
 <body>
