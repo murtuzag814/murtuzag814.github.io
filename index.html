@@ -499,7 +499,7 @@ section { padding: 5.5rem 2.5rem; position: relative; z-index: 1; }
 
 /* ======= UPDATES / POSTS ======= */
 #updates { background: var(--surface); }
-.posts-grid { display: flex; flex-direction: column; gap: 0; }
+.posts-grid { display: flex; flex-direction: column; gap: 1.5rem; }
 
 .post-card {
   background: var(--glass);
@@ -512,74 +512,79 @@ section { padding: 5.5rem 2.5rem; position: relative; z-index: 1; }
 .post-card:hover {
   border-color: rgba(79,110,247,0.35);
   box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-  transform: translateY(-3px);
+  transform: translateY(-4px);
 }
 
-/* Expanded state — image goes on top, content below */
-.post-card.expanded {
-  display: block !important;
-}
-.post-card.expanded .post-img-wrap {
-  width: 100%; height: 340px;
-  min-height: unset;
-}
-.post-card.expanded .post-body {
-  max-height: none !important;
-  -webkit-line-clamp: unset !important;
-  overflow: visible !important;
-  display: block !important;
-}
-.post-card.expanded .post-read-more { display: none; }
-.post-card.expanded .post-read-less { display: inline-flex !important; }
-
-/* Default: side-by-side */
 .post-card-inner {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: minmax(0, 280px) 1fr;
+  gap: 0;
 }
-.post-card.expanded .post-card-inner {
-  display: block;
+@media (max-width: 768px) {
+  .post-card-inner { grid-template-columns: 1fr !important; }
 }
+
 .post-img-wrap {
   overflow: hidden;
   background: var(--surface-2);
   min-height: 220px;
+  position: relative;
 }
-.post-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.post-img-wrap img { 
+  width: 100%; height: 100%; object-fit: cover; display: block; 
+}
+
 .post-content {
   padding: 2rem;
   display: flex; flex-direction: column; gap: 0.75rem;
 }
+
 .post-title {
   font-family: 'Syne', sans-serif;
-  font-size: 1.3rem; font-weight: 700; color: var(--white);
-  line-height: 1.25; letter-spacing: -0.015em;
-}
-.post-date { font-size: 0.8rem; color: var(--white-45); }
-.post-body {
-  font-size: 0.92rem; color: var(--white-70); line-height: 1.85;
+  font-size: 1.28rem; 
+  font-weight: 700; 
+  color: var(--white);
+  line-height: 1.25; 
+  letter-spacing: -0.015em;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.post-date { font-size: 0.8rem; color: var(--white-45); }
+.post-body {
+  font-size: 0.92rem; color: var(--white-70); line-height: 1.85;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .post-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
-.post-body a:hover { color: var(--accent-2); }
-.post-body strong { color: var(--white); font-weight: 600; }
-.post-actions { display: flex; gap: 0.75rem; align-items: center; margin-top: 0.25rem; }
+
+.post-actions { 
+  display: flex; gap: 0.75rem; align-items: center; margin-top: auto; 
+}
 .post-read-more, .post-read-less {
   display: inline-flex; align-items: center; gap: 0.4rem;
   font-size: 0.84rem; font-weight: 600;
   color: var(--accent); background: none; border: none;
-  cursor: pointer; padding: 0; text-decoration: none; font-family: 'DM Sans', sans-serif;
-  transition: color 0.2s;
+  cursor: pointer; padding: 0; text-decoration: none;
 }
-.post-read-more:hover { color: var(--accent-2); }
 .post-read-less { display: none; color: var(--white-45); }
-.post-read-less:hover { color: var(--white); }
 
-.posts-view-all { text-align: center; margin-top: 0.5rem; }
+/* Expanded state */
+.post-card.expanded .post-body {
+  -webkit-line-clamp: unset;
+  display: block;
+  overflow: visible;
+}
+.post-card.expanded .post-read-more { display: none; }
+.post-card.expanded .post-read-less { display: inline-flex !important; }
 
+.posts-view-all { text-align: center; margin-top: 2rem; }
+  
 /* ======= PROFILES ======= */
 #profiles { background: var(--surface-2); }
 .profiles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
