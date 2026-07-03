@@ -501,7 +501,7 @@ section { padding: 5.5rem 2.5rem; position: relative; z-index: 1; }
 #updates { background: var(--surface); }
 .posts-grid { display: flex; flex-direction: column; gap: 1.5rem; }
 
-.post-card {
+post-card {
   background: var(--glass);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
@@ -509,26 +509,16 @@ section { padding: 5.5rem 2.5rem; position: relative; z-index: 1; }
   transition: all 0.35s;
   margin-bottom: 1.25rem;
 }
-.post-card:hover {
-  border-color: rgba(79,110,247,0.35);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-  transform: translateY(-4px);
-}
 
 .post-card-inner {
   display: grid;
   grid-template-columns: minmax(0, 280px) 1fr;
-  gap: 0;
-}
-@media (max-width: 768px) {
-  .post-card-inner { grid-template-columns: 1fr !important; }
 }
 
 .post-img-wrap {
   overflow: hidden;
   background: var(--surface-2);
   min-height: 220px;
-  position: relative;
 }
 .post-img-wrap img { 
   width: 100%; height: 100%; object-fit: cover; display: block; 
@@ -536,7 +526,9 @@ section { padding: 5.5rem 2.5rem; position: relative; z-index: 1; }
 
 .post-content {
   padding: 2rem;
-  display: flex; flex-direction: column; gap: 0.75rem;
+  display: flex; 
+  flex-direction: column; 
+  gap: 0.75rem;
 }
 
 .post-title {
@@ -544,37 +536,38 @@ section { padding: 5.5rem 2.5rem; position: relative; z-index: 1; }
   font-size: 1.28rem; 
   font-weight: 700; 
   color: var(--white);
-  line-height: 1.25; 
-  letter-spacing: -0.015em;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.25;
 }
 
-.post-date { font-size: 0.8rem; color: var(--white-45); }
+.post-date { font-size: 0.82rem; color: var(--white-45); }
 .post-body {
-  font-size: 0.92rem; color: var(--white-70); line-height: 1.85;
+  font-size: 0.92rem; 
+  color: var(--white-70); 
+  line-height: 1.85;
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.post-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 
 .post-actions { 
-  display: flex; gap: 0.75rem; align-items: center; margin-top: auto; 
+  margin-top: auto; 
+  padding-top: 0.5rem;
 }
 .post-read-more, .post-read-less {
-  display: inline-flex; align-items: center; gap: 0.4rem;
-  font-size: 0.84rem; font-weight: 600;
-  color: var(--accent); background: none; border: none;
-  cursor: pointer; padding: 0; text-decoration: none;
+  display: inline-flex; 
+  align-items: center; 
+  gap: 0.4rem;
+  font-size: 0.84rem; 
+  font-weight: 600;
+  color: var(--accent); 
+  background: none; 
+  border: none;
+  cursor: pointer;
 }
 .post-read-less { display: none; color: var(--white-45); }
 
-/* Expanded state */
+/* Expanded State */
 .post-card.expanded .post-body {
   -webkit-line-clamp: unset;
   display: block;
@@ -583,7 +576,10 @@ section { padding: 5.5rem 2.5rem; position: relative; z-index: 1; }
 .post-card.expanded .post-read-more { display: none; }
 .post-card.expanded .post-read-less { display: inline-flex !important; }
 
-.posts-view-all { text-align: center; margin-top: 2rem; }
+@media (max-width: 768px) {
+  .post-card-inner { grid-template-columns: 1fr !important; }
+  .post-content { padding: 1.5rem; }
+}
   
 /* ======= PROFILES ======= */
 #profiles { background: var(--surface-2); }
@@ -975,6 +971,9 @@ footer a:hover { color: var(--accent); }
     <span class="section-label reveal">What We're Doing Right Now</span>
     <h2 class="section-title reveal">Latest updates &amp; insights</h2>
     <p class="section-sub reveal">Fresh content on SEO, AEO, GEO, e-commerce strategy, and Pakistan's D2C ecosystem — updated regularly.</p>
+    <div class="posts-grid" id="postsContainer">
+      <!-- PY2 will inject posts here automatically -->
+    </div>
     <div class="posts-grid">
                 <article class="post-card reveal" itemscope itemtype="https://schema.org/BlogPosting">
                     <meta itemprop="datePublished" content="2026-07-01">
