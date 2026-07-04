@@ -89,27 +89,33 @@ def convert_markdown(text):
     return text
 
 def generate_post_html(post, title, body):
-    """Generate HTML for a single post card (homepage version)."""
+    """Generate HTML for homepage with Read More button - Matches Index 1"""
     date_str = post['date'].strftime('%B %d, %Y')
     date_iso = post['date'].strftime('%Y-%m-%d')
-    
+   
     img_html = ""
     if post['img']:
         img_path = f"posts/{post['img'].name}"
-        img_html = f'''                    <div class="post-img-wrap">
-                        <img src="{img_path}" alt="{title}" loading="lazy">
-                    </div>'''
-    
-    html = f'''                <article class="post-card" itemscope itemtype="https://schema.org/BlogPosting">
+        img_html = f'''<div class="post-img-wrap">
+                          <img src="{img_path}" alt="{title}" loading="lazy">
+                      </div>'''
+   
+    html = f'''<article class="post-card" itemscope itemtype="https://schema.org/BlogPosting">
                     <meta itemprop="datePublished" content="{date_iso}">
                     <meta itemprop="headline" content="{title}">
                     <meta itemprop="url" content="{SITE_URL}/updates.html#{post['name']}">
-{img_html}
-                    <div class="post-content">
-                        <h3 class="post-title" itemprop="headline">{title}</h3>
-                        <time class="post-date" datetime="{date_iso}">&#128197; {date_str}</time>
-                        <div class="post-body" itemprop="articleBody">
-                            <p>{body}</p>
+                    <div class="post-card-inner">
+                        {img_html}
+                        <div class="post-content">
+                            <h3 class="post-title" itemprop="headline">{title}</h3>
+                            <time class="post-date" datetime="{date_iso}">📅 {date_str}</time>
+                            <div class="post-body" itemprop="articleBody">
+                                <p>{body}</p>
+                            </div>
+                            <div class="post-actions">
+                                <button class="post-read-more" onclick="togglePost(this)">Read more ↓</button>
+                                <button class="post-read-less" onclick="togglePost(this)">Show less ↑</button>
+                            </div>
                         </div>
                     </div>
                 </article>'''
@@ -198,18 +204,19 @@ def inject_posts_into_index(homepage_posts_html, post_count):
                     <a href="updates.html" class="btn-secondary">View All {post_count} Updates &#8594;</a>
                 </div>'''
     
-    posts_section = f'''<!-- UPDATES SECTION -->
+posts_section = f'''<!-- UPDATES SECTION -->
 <section id="updates">
   <div class="section-inner">
-    <p class="section-label">What We're Doing Right Now</p>
+    <span class="section-label">What We're Doing Right Now</span>
     <h2 class="section-title">Latest updates &amp; insights</h2>
-    <p class="section-sub">Fresh content on SEO, AEO, GEO, e-commerce strategy, and Pakistan's D2C ecosystem - updated regularly for search engines and AI crawlers.</p>
+    <p class="section-sub">Fresh content on SEO, AEO, GEO, e-commerce strategy, and Pakistan's D2C ecosystem — updated regularly.</p>
     <div class="posts-grid">
 {homepage_posts_html}
     </div>
 {view_all_link}
   </div>
 </section>
+
 <!-- /UPDATES SECTION -->'''
     
     # Find insertion point. If a previously-generated UPDATES SECTION block
