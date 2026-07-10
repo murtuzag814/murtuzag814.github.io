@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /black-labs/
+Sitemap: https://murtuzag814.github.io/sitemap.xml
