@@ -49,4 +49,6 @@ Allow: /
 User-agent: Meta-ExternalAgent
 Allow: /
 
+User-agent: *
+Allow: /
 Sitemap: https://murtuzag814.github.io/sitemap.xml
