@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>GMurtuza SEO - What We're Doing Right Now</title>
+    <title>Ghulam Murtuza (G Murtuza) - What I'm Doing Right Now</title>
     <link>https://murtuzag814.github.io</link>
-    <description>Latest updates from Ghulam Murtuza - E-Commerce SEO, AEO &amp; GEO Specialist in Karachi, Pakistan</description>
+    <description>Latest updates from Ghulam Murtuza - E-Commerce Growth Strategist, SEO, AEO &amp; GEO, Karachi, Pakistan</description>
     <language>en</language>
-    <lastBuildDate>Wed, 01 Jul 2026 12:32:56 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 29 Jul 2026 06:16:11 +0000</lastBuildDate>
     <atom:link href="https://murtuzag814.github.io/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
-      <title>Biggest E-commerce Blunders That Cost Brands Revenue</title>
-      <link>https://murtuzag814.github.io/updates.html#Biggest Blunders Made by E - Copy</link>
-      <guid isPermaLink="true">https://murtuzag814.github.io/updates.html#Biggest Blunders Made by E - Copy</guid>
-      <pubDate>Wed, 01 Jul 2026 11:50:11 +0000</pubDate>
-      <description><![CDATA[Many e-commerce businesses focus on growth while ignoring the mistakes that quietly reduce profits. The most common issues I see are:</p><p>1. <strong>Poor audience understanding</strong> — weak targeting and messaging lead to low conversion rates.<br>2. <strong>Poor product pages</strong> — unclear descriptions, weak visuals, and lack of trust signals hurt sales.<br>3. <strong>Ignoring mobile users</strong> — slow, non-optimized mobile experiences drive customers away.<br>4. <strong>No conversi]]></description>
+      <title>How I Reduced RTO by 40% for a Pakistani Fashion Brand</title>
+      <link>https://murtuzag814.github.io/posts/my-first-update.html</link>
+      <guid isPermaLink="true">https://murtuzag814.github.io/posts/my-first-update.html</guid>
+      <pubDate>Wed, 01 Jul 2026 12:32:56 +0000</pubDate>
+      <description><![CDATA[RTO (Return to Origin) is one of the biggest profit killers for Pakistani e-commerce brands. After analyzing over 50,000 orders at ZELLBURY, I identified]]></description>
     </item>
     <item>
-      <title>How I Reduced RTO by 40% for a Pakistani Fashion Brand</title>
-      <link>https://murtuzag814.github.io/updates.html#my-first-update</link>
-      <guid isPermaLink="true">https://murtuzag814.github.io/updates.html#my-first-update</guid>
-      <pubDate>Wed, 17 Jun 2026 16:17:31 +0000</pubDate>
-      <description><![CDATA[RTO (Return to Origin) is one of the <strong>biggest profit killers</strong> for Pakistani e-commerce brands. After analyzing over 50,000 orders at ZELLBURY, I identified three key patterns:</p><p>1. <strong>Address verification at checkout</strong> — implementing a simple address validation layer reduced fake/incomplete addresses by 22%.<br>2. <strong>Pre-delivery confirmation calls</strong> — a 60-second call before dispatch reduced RTO by another 15%.<br>3. <strong>COD order capping</strong> ]]></description>
+      <title>Biggest E-commerce Blunders That Cost Brands Revenue</title>
+      <link>https://murtuzag814.github.io/posts/biggest-blunders-made-by-e-copy.html</link>
+      <guid isPermaLink="true">https://murtuzag814.github.io/posts/biggest-blunders-made-by-e-copy.html</guid>
+      <pubDate>Wed, 01 Jul 2026 12:32:56 +0000</pubDate>
+      <description><![CDATA[Many e-commerce businesses focus on growth while ignoring the mistakes that quietly reduce profits. The most common issues I see are: 1. Poor audience]]></description>
     </item>
   </channel>
 </rss>
