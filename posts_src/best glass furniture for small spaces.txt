@@ -180,8 +180,6 @@ It should make the room work better for the people living in it.
 
 
 
-glass-furniture-for-small-spaces
-
-meta description:
+glass-furniture-for-small-spaces:
 
 Small spaces don't need less furniture—they need smarter furniture. Here's how glass furniture can make compact homes feel brighter, more open, and more practical without adding visual clutter.
