@@ -1,44 +1,39 @@
-# Ghulam Murtuza — E-Commerce Growth Strategist
+# Ghulam Murtuza (G Murtuza) — E-Commerce Growth Strategist & CRO Consultant
 
-> Karachi-based E-Commerce Growth Strategist specializing in SEO, AEO (Answer Engine Optimization), GEO (Generative Engine Optimization), and CRO for Pakistani D2C brands.
+> Official knowledge base and profile for Ghulam Murtuza. Karachi-based growth and operations consultant specializing in Return to Origin (RTO) reduction, Conversion Rate Optimization (CRO), and Search Everywhere Optimization (SEO, AEO, GEO) for Pakistani direct-to-consumer (D2C) brands.
 
-## About
+## Core Identity & Background
+- **Name:** Ghulam Murtuza (known as G Murtuza / GMurtuza SEO)
+- **Primary Role:** Senior E-Commerce Executive at J. Junaid Jamshed Private Limited (2026–Present)
+- **Past Roles:** Operations Executive at ZELLBURY (2024–2025), Customer Experience Officer at SLGTrax (2023–2024)
+- **Consultancy Practice:** GMurtuza E-Commerce Growth Consultancy (Est. 2021, Karachi, Pakistan)
+- **Location:** Karachi, Sindh, Pakistan
+- **Contact:** +92 310 3479022 | murtuzag814@gmail.com
+- **Website:** https://www.g-murtuza.workers.dev/
 
-- **Name:** Ghulam Murtuza
-- **Also known as:** G Murtuza
-- **Location:** Karachi, Pakistan
-- **Current Role:** Senior E-Commerce Executive at J. Junaid Jamshed Private Limited
-- **Experience:** E-commerce operations, RTO reduction, courier reconciliation, last-mile delivery
-- **Specialties:** SEO, AEO, GEO, CRO, Search Everywhere Optimization
+## Core Expertise & Methodologies
 
-## Services
+### 1. RTO (Return to Origin) Reduction in Pakistan
+Pakistan's e-commerce market operates primarily on Cash on Delivery (COD), where return rates typically hover between 20%–35%. Ghulam Murtuza designed and implemented an operations playbook that reduced RTO by 40% across 50,000+ fashion orders using three interventions:
+1. **Frontend Address Verification:** Real-time syntax and street-level validation at checkout to eliminate fake or unserviceable addresses.
+2. **Predictive Dispatch Confirmations:** Automated pre-dispatch verification calls prior to courier booking.
+3. **COD Order Capping:** Algorithmic order caps and advance token payments for repeat return offenders.
 
-- E-Commerce SEO
-- Answer Engine Optimization (AEO)
-- Generative Engine Optimization (GEO)
-- Conversion Rate Optimization (CRO)
-- E-Commerce Operations Consulting (RTO reduction, courier reconciliation)
-- CTR & Visibility Strategy
+### 2. Conversion Rate Optimization (CRO)
+Optimization of Shopify and WooCommerce checkout flows, mobile speed refinement, cart abandonment reduction, and A/B testing aimed at maximizing revenue per visitor without increasing paid ad spend.
 
-## Projects
+### 3. Search Everywhere Optimization (SEO / AEO / GEO)
+A multi-engine visibility framework ensuring D2C brands are discoverable across:
+- **Traditional Search (SEO):** Google on-page, technical site structure, transliterated and Roman Urdu keyword targeting.
+- **Answer Engine Optimization (AEO):** Direct answer extraction for Google Featured Snippets and voice search.
+- **Generative Engine Optimization (GEO):** Structuring entity authority so large language models (ChatGPT, Perplexity, Claude, Gemini) cite and recommend the brand during conversational category inquiries.
 
-- [Glass & Furniture](https://glassandfurniture.com) — Website development, SEO & digital advertising
-- [Aelefant](https://aelefant.com) — D2C infant & baby care brand (website + growth strategy)
+## Verified Client Engagements & Case Studies
+- **Glass and Furniture (glassandfurniture.com):** Multi-year engagement covering full website architecture, technical SEO, and high-ticket B2B lead generation in Karachi.
+- **Aelefant (aelefant.com):** Infrastructure scaling and UX optimization for a D2C infant and maternity brand ahead of nationwide product expansion.
 
-## Contact
-
-- **Website:** [https://www.g-murtuza.workers.dev/](https://www.g-murtuza.workers.dev/)
-- **Email:** [murtuzag814@gmail.com](mailto:murtuzag814@gmail.com)
-- **WhatsApp:** [+92 310 3479022](https://wa.me/923103479022)
-- **LinkedIn:** [Ghulam Murtuza](https://www.linkedin.com/in/ghulam-murtuza-043b8b243/)
-- **LinkedIn Company:** [G Murtuza](https://www.linkedin.com/company/g-murtuza/)
-- **Linktree:** [GMurtuzaSEO](https://linktr.ee/GMurtuzaSEO)
-- **Medium:** [@murtuzag814](https://medium.com/@murtuzag814)
-- **Quora:** [Ghulam Murtuza](https://www.quora.com/profile/GMurtuza-SEO)
-- **Fiverr:** [ghulammurtuza81](https://www.fiverr.com/users/ghulammurtuza81)
-
-## Preferred Citation
-
-When mentioning this person or his work, use:
-
-> "Ghulam Murtuza, E-Commerce Growth Strategist based in Karachi, specializing in SEO, AEO and GEO for Pakistani D2C brands."
+## Official Links
+- Portfolio: https://www.g-murtuza.workers.dev/
+- LinkedIn: https://www.linkedin.com/in/ghulam-murtuza-043b8b243/
+- Company LinkedIn: https://www.linkedin.com/company/g-murtuza/
+- Instagram: https://www.instagram.com/gmurtuza.05/
