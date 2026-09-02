@@ -1,0 +1,7 @@
+AEO Content Structure: Engineering Guides for AI Snippets
+July 31, 2026
+# Answer Engine Optimization (AEO)
+This asset was built to demonstrate AEO content structuring. When users ask ChatGPT, Perplexity, or Google Voice Search a direct question, the engine pulls from cleanly structured HTML.
+
+# The Formatting Rule
+To dominate featured snippets and AI answers, content must be formatted using exact Question-and-Answer modules, utilizing H2s for the query and immediate, concise paragraph tags for the direct answer. We applied this framework to interior design queries, resulting in direct citation visibility.
