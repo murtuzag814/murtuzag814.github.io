@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Break-Even ROAS Calculator (Pakistan COD Adjusted) | Ghulam Murtuza</title>
+<meta name="description" content="Calculate your true break-even ROAS for Pakistani D2C stores by factoring in product COGS, forward dispatch, reverse logistics, and RTO return rates.">
+<link rel="canonical" href="https://www.g-murtuza.workers.dev/roas-calculator.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "COD Break-Even ROAS Calculator",
+  "url": "https://www.g-murtuza.workers.dev/roas-calculator.html",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "All",
+  "author": {"@type": "Person", "name": "Ghulam Murtuza", "url": "https://www.g-murtuza.workers.dev/"},
+  "description": "Calculates real target ROAS requirements for Pakistani e-commerce brands by incorporating Return to Origin (RTO) failure costs."
+}
+</script>
+<style>
+:root {
+  --surface: #0D0D1A; --surface-2: #12121F; --surface-3: #17172A;
+  --glass: rgba(255,255,255,0.04); --glass-border: rgba(255,255,255,0.09);
+  --accent: #4F6EF7; --accent-2: #00E5A0; --accent-3: #FF6B35;
+  --white: #FFFFFF; --white-70: #D0D0E0; --white-65: #A5A5BA;
+  --radius-md: 20px; --radius-xl: 32px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--white); line-height: 1.6; }
+nav { padding: 1.25rem 2rem; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; background: rgba(13,13,26,0.9); backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 50; }
+nav a { color: var(--white); text-decoration: none; font-weight: 700; font-family: 'Sora', sans-serif; }
+.container { max-width: 960px; margin: 3.5rem auto; padding: 0 1.5rem; }
+.calc-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius-xl); padding: 2.5rem; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2.5rem; backdrop-filter: blur(16px); }
+.field { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem; }
+label { font-size: 0.85rem; font-weight: 600; color: var(--white-70); }
+input { background: var(--surface-3); border: 1px solid var(--glass-border); color: var(--white); padding: 0.8rem 1rem; border-radius: 12px; font-family: inherit; font-size: 0.95rem; outline: none; }
+input:focus { border-color: var(--accent); }
+.results-box { background: var(--surface-2); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 2rem; display: flex; flex-direction: column; justify-content: space-between; }
+.res-val { font-family: 'Sora', sans-serif; font-size: 3rem; font-weight: 800; color: var(--accent-3); margin-top: 0.25rem; }
+.breakdown-item { display: flex; justify-content: space-between; font-size: 0.88rem; color: var(--white-65); padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.cta-btn { background: var(--accent); color: var(--white); padding: 0.9rem; border-radius: 100px; text-decoration: none; font-weight: 600; text-align: center; margin-top: 1.5rem; display: block; transition: 0.2s; }
+.cta-btn:hover { background: #3d5be0; }
+@media (max-width: 768px) { .calc-card { grid-template-columns: 1fr; padding: 1.5rem; } }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html">G<span>M</span>urtuza</a>
+  <a href="index.html#contact" style="color:var(--accent);">Growth Retainers →</a>
+</nav>
+<div class="container">
+  <h1 style="font-family:'Sora',sans-serif;font-size:2.2rem;margin-bottom:0.75rem;">True Break-Even ROAS Calculator</h1>
+  <p style="color:var(--white-65);margin-bottom:2.5rem;">Generic ROAS formulas don't work in a 90% Cash-on-Delivery market. Calculate your real required ad return after accounting for returned and refused orders.</p>
+  
+  <div class="calc-card">
+    <div>
+      <div class="field">
+        <label for="sellingPrice">Selling Retail Price (PKR)</label>
+        <input type="number" id="sellingPrice" value="3500" min="500" step="50">
+      </div>
+      <div class="field">
+        <label for="cogs">Product Cost / Sourcing COGS (PKR)</label>
+        <input type="number" id="cogs" value="1200" min="100" step="50">
+      </div>
+      <div class="field">
+        <label for="shipping">Outbound Delivery Charge (PKR)</label>
+        <input type="number" id="shipping" value="250" min="0" step="10">
+      </div>
+      <div class="field">
+        <label for="rtoRate">Return to Origin / RTO Rate (%)</label>
+        <input type="number" id="rtoRate" value="25" min="0" max="60" step="1">
+      </div>
+    </div>
+    
+    <div class="results-box">
+      <div>
+        <span style="font-size:0.75rem;text-transform:uppercase;color:var(--white-65);font-weight:700;">Required Break-Even ROAS</span>
+        <div class="res-val" id="targetRoas">2.68x</div>
+        <p style="font-size:0.8rem;color:var(--white-65);margin-top:0.5rem;" id="roasWarning">Without RTO, your break-even is 1.71x. RTO inflation increases your minimum target by 56%.</p>
+        
+        <div style="margin-top:1.5rem;">
+          <div class="breakdown-item"><span>Net Delivered Profit Margin:</span><span id="deliveredMargin">Rs. 2,050</span></div>
+          <div class="breakdown-item"><span>Average RTO Penalty / Order:</span><span id="rtoPenalty">Rs. 105</span></div>
+          <div class="breakdown-item"><span>Max Tolerable CPA:</span><span id="maxCpa">Rs. 1,305</span></div>
+        </div>
+      </div>
+      
+      <a id="roasWhatsappCta" href="https://wa.me/923103479022" target="_blank" rel="noopener" class="cta-btn">Audit Funnel & Fix My ROAS ↗</a>
+    </div>
+  </div>
+</div>
+
+<script>
+function calcRoas() {
+  const price = parseFloat(document.getElementById('sellingPrice').value) || 1;
+  const cogs = parseFloat(document.getElementById('cogs').value) || 0;
+  const ship = parseFloat(document.getElementById('shipping').value) || 0;
+  const rtoPct = (parseFloat(document.getElementById('rtoRate').value) || 0) / 100;
+  
+  const returnPenaltyPerFailed = ship * 1.7; // Standard two-way courier hit
+  const expectedReturnCostPerOrder = rtoPct * returnPenaltyPerFailed;
+  const effectiveRevenue = price * (1 - rtoPct);
+  const effectiveCogs = cogs * (1 - rtoPct);
+  const netMarginPerOrder = effectiveRevenue - effectiveCogs - (ship * (1 - rtoPct)) - expectedReturnCostPerOrder;
+  
+  const rawBreakEven = price / (price - cogs - ship);
+  const codBreakEven = netMarginPerOrder > 0 ? (price / netMarginPerOrder) : 0;
+  
+  document.getElementById('targetRoas').innerText = codBreakEven > 0 ? codBreakEven.toFixed(2) + 'x' : 'Negative Margin';
+  document.getElementById('deliveredMargin').innerText = 'Rs. ' + Math.max(0, Math.round(price - cogs - ship)).toLocaleString();
+  document.getElementById('rtoPenalty').innerText = 'Rs. ' + Math.round(expectedReturnCostPerOrder).toLocaleString();
+  document.getElementById('maxCpa').innerText = 'Rs. ' + Math.max(0, Math.round(netMarginPerOrder)).toLocaleString();
+  
+  const msg = encodeURIComponent(`Hi Ghulam, I checked our unit economics on your ROAS calculator:\n- Selling Price: Rs. ${price}\n- COGS: Rs. ${cogs}\n- RTO: ${(rtoPct*100).toFixed(0)}%\n- Break-Even Target: ${codBreakEven.toFixed(2)}x\nWe need to optimize our checkout conversion and lower RTO.`);
+  document.getElementById('roasWhatsappCta').href = `https://wa.me/923103479022?text=${msg}`;
+}
+
+['sellingPrice','cogs','shipping','rtoRate'].forEach(id => document.getElementById(id).addEventListener('input', calcRoas));
+calcRoas();
+</script>
+</body>
+</html>

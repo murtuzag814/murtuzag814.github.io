@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D2C Discount vs Profit Margin Simulator | Ghulam Murtuza</title>
+<meta name="description" content="Simulate how seasonal sales and flash discounts impact your bottom line before launching Blessed Friday or Eid marketing campaigns in Pakistan.">
+<link rel="canonical" href="https://www.g-murtuza.workers.dev/margin-calculator.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "D2C Discount Margin Simulator",
+  "url": "https://www.g-murtuza.workers.dev/margin-calculator.html",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "All",
+  "author": {"@type": "Person", "name": "Ghulam Murtuza", "url": "https://www.g-murtuza.workers.dev/"},
+  "description": "Calculates required sales volume multipliers to maintain gross profit during promotional discount events."
+}
+</script>
+<style>
+:root {
+  --surface: #0D0D1A; --surface-2: #12121F; --surface-3: #17172A;
+  --glass: rgba(255,255,255,0.04); --glass-border: rgba(255,255,255,0.09);
+  --accent: #4F6EF7; --accent-2: #00E5A0; --accent-3: #FF6B35;
+  --white: #FFFFFF; --white-70: #D0D0E0; --white-65: #A5A5BA;
+  --radius-md: 20px; --radius-xl: 32px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--white); line-height: 1.6; }
+nav { padding: 1.25rem 2rem; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; background: rgba(13,13,26,0.9); backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 50; }
+nav a { color: var(--white); text-decoration: none; font-weight: 700; font-family: 'Sora', sans-serif; }
+.container { max-width: 960px; margin: 3.5rem auto; padding: 0 1.5rem; }
+.calc-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius-xl); padding: 2.5rem; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2.5rem; backdrop-filter: blur(16px); }
+.field { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem; }
+label { font-size: 0.85rem; font-weight: 600; color: var(--white-70); }
+input { background: var(--surface-3); border: 1px solid var(--glass-border); color: var(--white); padding: 0.8rem 1rem; border-radius: 12px; font-family: inherit; font-size: 0.95rem; outline: none; }
+input:focus { border-color: var(--accent); }
+.results-box { background: var(--surface-2); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 2rem; display: flex; flex-direction: column; justify-content: space-between; }
+.res-val { font-family: 'Sora', sans-serif; font-size: 2.5rem; font-weight: 800; color: var(--accent-2); margin-top: 0.25rem; }
+.breakdown-item { display: flex; justify-content: space-between; font-size: 0.88rem; color: var(--white-65); padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.cta-btn { background: var(--accent); color: var(--white); padding: 0.9rem; border-radius: 100px; text-decoration: none; font-weight: 600; text-align: center; margin-top: 1.5rem; display: block; transition: 0.2s; }
+.cta-btn:hover { background: #3d5be0; }
+@media (max-width: 768px) { .calc-card { grid-template-columns: 1fr; padding: 1.5rem; } }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html">G<span>M</span>urtuza</a>
+  <a href="index.html#contact" style="color:var(--accent);">Operations Retainers →</a>
+</nav>
+<div class="container">
+  <h1 style="font-family:'Sora',sans-serif;font-size:2.2rem;margin-bottom:0.75rem;">Discount vs. Margin Simulator</h1>
+  <p style="color:var(--white-65);margin-bottom:2.5rem;">See how much additional volume you actually need to break even when offering 15%, 20%, or 30% promotional sales.</p>
+  
+  <div class="calc-card">
+    <div>
+      <div class="field">
+        <label for="regPrice">Regular Item Price (PKR)</label>
+        <input type="number" id="regPrice" value="4000" min="500" step="100">
+      </div>
+      <div class="field">
+        <label for="cost">COGS / Unit Sourcing Cost (PKR)</label>
+        <input type="number" id="cost" value="1800" min="100" step="50">
+      </div>
+      <div class="field">
+        <label for="discount">Planned Discount (%)</label>
+        <input type="number" id="discount" value="20" min="1" max="80" step="1">
+      </div>
+      <div class="field">
+        <label for="currentVol">Normal Monthly Units Sold</label>
+        <input type="number" id="currentVol" value="1000" min="50" step="50">
+      </div>
+    </div>
+    
+    <div class="results-box">
+      <div>
+        <span style="font-size:0.75rem;text-transform:uppercase;color:var(--white-65);font-weight:700;">Required Volume Lift</span>
+        <div class="res-val" id="volumeLift">+57.1%</div>
+        <p style="font-size:0.8rem;color:var(--white-65);margin-top:0.5rem;" id="volNote">You must sell 1,571 units just to make the same gross profit.</p>
+        
+        <div style="margin-top:1.5rem;">
+          <div class="breakdown-item"><span>Original Margin / Unit:</span><span id="oldMargin">Rs. 2,200</span></div>
+          <div class="breakdown-item"><span>Discounted Margin / Unit:</span><span id="newMargin">Rs. 1,400</span></div>
+          <div class="breakdown-item"><span>Discount Cash Hit / Unit:</span><span id="cashHit" style="color:var(--accent-3);">Rs. 800</span></div>
+        </div>
+      </div>
+      
+      <a id="marginWhatsappCta" href="https://wa.me/923103479022" target="_blank" rel="noopener" class="cta-btn">Design a Profitable Offer →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+function calcMargin() {
+  const p = parseFloat(document.getElementById('regPrice').value) || 1;
+  const c = parseFloat(document.getElementById('cost').value) || 0;
+  const d = (parseFloat(document.getElementById('discount').value) || 0) / 100;
+  const vol = parseFloat(document.getElementById('currentVol').value) || 1;
+  
+  const oldUnitMargin = p - c;
+  const discPrice = p * (1 - d);
+  const newUnitMargin = discPrice - c;
+  
+  if (newUnitMargin <= 0) {
+    document.getElementById('volumeLift').innerText = 'Unprofitable';
+    document.getElementById('volNote').innerText = 'Selling at or below cost.';
+    return;
+  }
+  
+  const reqVol = (oldUnitMargin * vol) / newUnitMargin;
+  const liftPct = ((reqVol - vol) / vol) * 100;
+  
+  document.getElementById('volumeLift').innerText = '+' + liftPct.toFixed(1) + '%';
+  document.getElementById('volNote').innerText = `You must sell ${Math.round(reqVol).toLocaleString()} units to make the same gross profit.`;
+  document.getElementById('oldMargin').innerText = 'Rs. ' + Math.round(oldUnitMargin).toLocaleString();
+  document.getElementById('newMargin').innerText = 'Rs. ' + Math.round(newUnitMargin).toLocaleString();
+  document.getElementById('cashHit').innerText = 'Rs. ' + Math.round(p - discPrice).toLocaleString();
+  
+  const msg = encodeURIComponent(`Hi Ghulam, I ran our sale numbers on your margin simulator:\n- Normal Price: Rs. ${p}\n- Discount: ${(d*100).toFixed(0)}%\n- Required Volume Lift: +${liftPct.toFixed(1)}%\nI want to discuss CRO and bundle pricing to protect our margin.`);
+  document.getElementById('marginWhatsappCta').href = `https://wa.me/923103479022?text=${msg}`;
+}
+
+['regPrice','cost','discount','currentVol'].forEach(id => document.getElementById(id).addEventListener('input', calcMargin));
+calcMargin();
+</script>
+</body>
+</html>
