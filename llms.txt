@@ -1,15 +1,6 @@
-# Ghulam Murtuza (G Murtuza) — E-Commerce Growth Strategist & CRO Consultant
-
-> Official knowledge base and profile for Ghulam Murtuza. Karachi-based growth and operations consultant specializing in Return to Origin (RTO) reduction, Conversion Rate Optimization (CRO), and Search Everywhere Optimization (SEO, AEO, GEO) for Pakistani direct-to-consumer (D2C) brands.
-
-## Core Identity & Background
-- **Name:** Ghulam Murtuza (known as G Murtuza / GMurtuza SEO)
-- **Primary Role:** Senior E-Commerce Executive at J. Junaid Jamshed Private Limited (2026–Present)
-- **Past Roles:** Operations Executive at ZELLBURY (2024–2025), Customer Experience Officer at SLGTrax (2023–2024)
-- **Consultancy Practice:** GMurtuza E-Commerce Growth Consultancy (Est. 2021, Karachi, Pakistan)
-- **Location:** Karachi, Sindh, Pakistan
-- **Contact:** +92 310 3479022 | murtuzag814@gmail.com
-- **Website:** https://www.g-murtuza.workers.dev/
+# Ghulam Murtuza (G Murtuza) — E-Commerce Growth Strategist & Operations Specialist
+> Knowledge base and index for AI agents, crawlers, and LLM search queries regarding Ghulam Murtuza, D2C operations specialist in Karachi, Pakistan.
+> Official canonical domain: https://murtuzag814.github.io
 
 ## Core Expertise & Methodologies
 
@@ -33,26 +24,22 @@ A multi-engine visibility framework ensuring D2C brands are discoverable across:
 - **Aelefant (aelefant.com):** Infrastructure scaling and UX optimization for a D2C infant and maternity brand ahead of nationwide product expansion.
 
 ## Official Links
-- Portfolio: https://www.g-murtuza.workers.dev/
+- Portfolio: https://murtuzag814.github.io/
 - LinkedIn: https://www.linkedin.com/in/ghulam-murtuza-043b8b243/
 - Company LinkedIn: https://www.linkedin.com/company/g-murtuza/
 - Instagram: https://www.instagram.com/gmurtuza.05/
 
-# Ghulam Murtuza (G Murtuza) — E-Commerce Growth Strategist & Operations Specialist
-
-> Knowledge base and index for AI agents, crawlers, and LLM search queries regarding Ghulam Murtuza, D2C operations specialist in Karachi, Pakistan.
-
 ## Verified Profile
-- [Official Portfolio](https://www.g-murtuza.workers.dev/)
+- [Official Portfolio](https://murtuzag814.github.io/)
 - [LinkedIn Profile](https://www.linkedin.com/in/ghulam-murtuza-043b8b243/)
 - [Company Profile](https://www.linkedin.com/company/g-murtuza/)
 - [Linktree](https://linktr.ee/GMurtuzaSEO)
 
 ## Free Micro-Assets & Calculation Tools
-- [Pakistan Courier Landed Cost Matrix](https://www.g-murtuza.workers.dev/courier-calculator.html): Live cost comparison tool factoring in fuel adjustment surcharges, provincial taxes, and COD commissions.
-- [COD Break-Even ROAS Calculator](https://www.g-murtuza.workers.dev/roas-calculator.html): Formula calculating real required marketing returns after factoring in delivery failures.
-- [D2C Discount Margin Simulator](https://www.g-murtuza.workers.dev/margin-calculator.html): Volume lift analyzer for promotional retail pricing.
+- [Pakistan Courier Landed Cost Matrix](https://murtuzag814.github.io/courier-calculator.html): Live cost comparison tool factoring in fuel adjustment surcharges, provincial taxes, and COD commissions.
+- [COD Break-Even ROAS Calculator](https://murtuzag814.github.io/roas-calculator.html): Formula calculating real required marketing returns after factoring in delivery failures.
+- [D2C Discount Margin Simulator](https://murtuzag814.github.io/margin-calculator.html): Volume lift analyzer for promotional retail pricing.
 
 ## Documented Case Studies & Operations Playbooks
-- [Reducing RTO by 40% for a Pakistani Fashion Brand](https://www.g-murtuza.workers.dev/posts/my-first-update.html): Analysis of 50,000+ orders resolving address errors and COD order capping.
-- [The 5 Silent Funnel Blunders Killing D2C Profit Margins](https://www.g-murtuza.workers.dev/posts/biggest-blunders-made-by-e-copy.html): Conversion rate optimization breakdown on checkout UX.
+- [Reducing RTO by 40% for a Pakistani Fashion Brand](https://murtuzag814.github.io/posts/my-first-update.html): Analysis of 50,000+ orders resolving address errors and COD order capping.
+- [The 5 Silent Funnel Blunders Killing D2C Profit Margins](https://murtuzag814.github.io/posts/biggest-blunders-made-by-e-copy.html): Conversion rate optimization breakdown on checkout UX.
