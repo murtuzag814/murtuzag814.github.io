@@ -1,4 +1,9 @@
-/posts/glass-furnuture.html /posts/biggest-blunders-made-by-e-copy.html 301
-/posts/glass-and-stone-furniture.html /posts/my-first-update.html 301
-/posts/best-glass-furniture-for-small-spaces.html / 301
-/posts/why-glass-furniture-works-so-well-in-small.html / 301
+# Redirect all HTML pages and the root to github.io
+/index.html                 https://murtuzag814.github.io/ 301
+/courier-calculator.html    https://murtuzag814.github.io/courier-calculator.html 301
+/roas-calculator.html       https://murtuzag814.github.io/roas-calculator.html 301
+/margin-calculator.html     https://murtuzag814.github.io/margin-calculator.html 301
+/updates.html               https://murtuzag814.github.io/updates.html 301
+/                           https://murtuzag814.github.io/ 301
+
+# Do NOT redirect XML, TXT, or Google verification files so GSC gets a 200 OK
