@@ -17,3 +17,10 @@ with open("sitemap.xml", "w") as f:
 
 with open("robots.txt", "w") as f:
     f.write(f"User-agent: *\nAllow: /\nSitemap: {domain}/sitemap.xml\n")
+
+urls = [
+    f"{domain}/",
+    f"{domain}/courier-calculator.html",
+    f"{domain}/roas-calculator.html",
+    f"{domain}/margin-calculator.html"
+]
