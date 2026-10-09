@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "title": "How I Reduced RTO by 40% for a Pakistani Fashion Brand",
+    "slug": "rto-reduction-case-study",
+    "date": "2026-10-09",
+    "category": "Operations",
+    "excerpt": "To reduce RTO in Pakistan's COD market, you must fix operational workflows before dispatch. We reduced RTO by 40% by implementing strict checkout address verification, automated pre-delivery confirmation algorithms, and dynamic COD capping based on customer history, preventing fake orders from destroying reverse logistics margins.\n\nCover Image:(Drag and drop any image you have, or take a screenshot",
+    "thumbnail": "/posts/images/rto-reduction-case-study-cover.jpg"
+  }
+]
