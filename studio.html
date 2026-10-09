@@ -31,7 +31,7 @@
     <label>Direct Answer (GEO Snippet - max 60 words)</label>
     <textarea id="p_direct" rows="3"></textarea>
     
-    <label>Cover Image</label>
+    <label>Cover Image (Optional)</label>
     <div class="dropzone" id="dz_cover">Drag & Drop Cover Image Here</div>
     <input type="hidden" id="cover_b64">
 </div>
@@ -86,7 +86,7 @@
             <hr style="border-color:#30363d; margin: 20px 0;">
             <select id="h_type_${sectionCount}"><option value="h2">H2</option><option value="h3">H3</option></select>
             <input type="text" id="h_text_${sectionCount}" placeholder="Heading">
-            <textarea id="p_text_${sectionCount}" rows="5" placeholder="Markdown/HTML body content..."></textarea>
+            <textarea id="p_text_${sectionCount}" rows="5" placeholder="Body content..."></textarea>
             <div class="dropzone" id="dz_${sectionCount}">Drag Image for this section (Optional)</div>
             <input type="hidden" id="img_${sectionCount}">
         `;
@@ -111,15 +111,42 @@
 
         log(`Starting build process for: ${slug}`);
 
-        // 1. Upload Cover Image
+        // 1. Upload Cover Image (If exists)
         const coverB64 = document.getElementById('cover_b64').value;
+        let thumbUrl = "";
         if(coverB64) {
             log("Uploading cover image...");
             await ghFetch(`posts/images/${slug}-cover.jpg`, 'PUT', { message: `Upload cover for ${slug}`, content: coverB64 });
+            thumbUrl = `/posts/images/${slug}-cover.jpg`;
         }
 
-        // 2. Build HTML Body
-        let bodyHtml = `<aside style="background:#161b22; padding:15px; border-left:4px solid #58a6ff; margin-bottom:20px;"><strong>Direct Answer:</strong> ${direct}</aside>`;
+        // 2. Build HTML Body with Embedded CSS
+        const cssBlock = `
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;800&family=DM+Sans:wght@400;500&display=swap');
+            :root { --surface: #0D0D1A; --surface-2: #12121F; --white: #FFFFFF; --white-70: rgba(255,255,255,0.7); --accent: #4F6EF7; --border: rgba(255,255,255,0.09); }
+            body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--white); line-height: 1.8; margin: 0; padding: 0; }
+            .container { max-width: 800px; margin: 0 auto; padding: 60px 20px; }
+            .back-link { display: inline-flex; margin-bottom: 30px; font-weight: 600; color: var(--accent); text-decoration: none; font-size: 0.9rem; }
+            .back-link:hover { text-decoration: underline; }
+            h1 { font-family: 'Sora', sans-serif; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; margin-bottom: 15px; letter-spacing: -0.02em; }
+            h2 { font-family: 'Sora', sans-serif; font-size: 1.8rem; margin-top: 50px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+            h3 { font-family: 'Sora', sans-serif; font-size: 1.3rem; margin-top: 30px; color: var(--white); }
+            p { margin-bottom: 20px; color: var(--white-70); font-size: 1.05rem; }
+            .meta { color: var(--white-45); font-size: 0.9rem; margin-bottom: 40px; display: block; }
+            .geo-box { background: var(--surface-2); padding: 25px; border-left: 4px solid var(--accent); border-radius: 8px; margin: 30px 0; border: 1px solid var(--border); border-left-width: 4px; }
+            .geo-box strong { display: block; margin-bottom: 10px; color: var(--accent); font-family: 'Sora', sans-serif; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
+            figure { margin: 40px 0; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+            img { width: 100%; height: auto; display: block; }
+        </style>`;
+
+        let bodyHtml = `
+            <div class="container">
+                <a href="/index.html#updates" class="back-link">&larr; Back to Portfolio</a>
+                <h1>${title}</h1>
+                <span class="meta">&#128197; ${date} &nbsp;·&nbsp; ${document.getElementById('p_category').value}</span>
+                <div class="geo-box"><strong>Direct Answer</strong><p style="margin:0; color:#fff;">${direct}</p></div>
+        `;
         
         for(let i=1; i<=sectionCount; i++) {
             const hType = document.getElementById(`h_type_${i}`).value;
@@ -133,11 +160,12 @@
                 const imgPath = `posts/images/${slug}-${i}.jpg`;
                 log(`Uploading section ${i} image...`);
                 await ghFetch(imgPath, 'PUT', { message: `Upload img for ${slug}`, content: imgB64 });
-                bodyHtml += `<figure><img src="/${imgPath}" loading="lazy" style="max-width:100%; height:auto;" alt="${hText}"></figure>\n`;
+                bodyHtml += `<figure><img src="/${imgPath}" loading="lazy" alt="${hText}"></figure>\n`;
             }
         }
+        bodyHtml += `</div>`; // Close container
 
-        const fullHtml = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>${title}</title><meta name="description" content="${direct}"><link rel="stylesheet" href="/style.css"></head><body style="background:#0d1117; color:#c9d1d9; max-width:800px; margin:0 auto; padding:20px;"><h1>${title}</h1><p><small>${date}</small></p>${bodyHtml}</body></html>`;
+        const fullHtml = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${title}</title><meta name="description" content="${direct}">${cssBlock}</head><body>${bodyHtml}</body></html>`;
 
         // 3. Upload HTML File
         log("Compiling and uploading HTML file...");
@@ -154,13 +182,16 @@
             sha = data.sha;
         }
         
-        registryData.unshift({ title, slug, date, category: document.getElementById('p_category').value, excerpt: direct, thumbnail: `/posts/images/${slug}-cover.jpg` });
+        // Remove existing post if it has the same slug to prevent duplicates when updating
+        registryData = registryData.filter(p => p.slug !== slug);
+        
+        registryData.unshift({ title, slug, date, category: document.getElementById('p_category').value, excerpt: direct, thumbnail: thumbUrl });
         
         const updatePayload = { message: `Update posts.json with ${slug}`, content: btoa(unescape(encodeURIComponent(JSON.stringify(registryData, null, 2)))) };
         if(sha) updatePayload.sha = sha;
         await ghFetch('posts.json', 'PUT', updatePayload);
 
-        log("✅ PUBLISH COMPLETE. GitHub Pages is building. Live in ~30 seconds.");
+        log("✅ PUBLISH COMPLETE. GitHub Pages is building. Live in ~60 seconds.");
     }
 </script>
 </body>
