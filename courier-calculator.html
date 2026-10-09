@@ -1,146 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pakistan Courier Rates & Landed Cost Calculator | TCS, Trax, Leopards</title>
-<meta name="description" content="Calculate real landed courier costs in Pakistan including GST, fuel surcharge, and COD fees across TCS, Trax, Leopards, CallCourier, and PostEx.">
-<link rel="canonical" href="https://murtuzag814.github.io/roas-calculator.html">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Pakistan E-Commerce Courier Landed Cost Calculator",
-  "url": "https://www.g-murtuza.workers.dev/courier-calculator.html",
-  "applicationCategory": "BusinessApplication",
-  "operatingSystem": "All",
-  "author": {"@type": "Person", "name": "Ghulam Murtuza", "url": "https://www.g-murtuza.workers.dev/"},
-  "description": "Calculates real landed shipping costs in Pakistan with GST, fuel surcharge, COD commissions, and packaging costs."
-}
-</script>
-<style>
-:root {
-  --surface: #0D0D1A; --surface-2: #12121F; --surface-3: #17172A;
-  --glass: rgba(255,255,255,0.04); --glass-border: rgba(255,255,255,0.09);
-  --accent: #4F6EF7; --accent-2: #00E5A0; --accent-3: #FF6B35;
-  --white: #FFFFFF; --white-70: #D0D0E0; --white-65: #A5A5BA;
-  --radius-md: 20px; --radius-xl: 32px;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--white); line-height: 1.6; }
-nav { padding: 1.25rem 2rem; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; background: rgba(13,13,26,0.9); backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 50; }
-nav a { color: var(--white); text-decoration: none; font-weight: 700; font-family: 'Sora', sans-serif; }
-.container { max-width: 960px; margin: 3.5rem auto; padding: 0 1.5rem; }
-.calc-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius-xl); padding: 2.5rem; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2.5rem; backdrop-filter: blur(16px); }
-.field { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem; }
-label { font-size: 0.85rem; font-weight: 600; color: var(--white-70); }
-select, input { background: var(--surface-3); border: 1px solid var(--glass-border); color: var(--white); padding: 0.8rem 1rem; border-radius: 12px; font-family: inherit; font-size: 0.95rem; outline: none; }
-select:focus, input:focus { border-color: var(--accent); }
-.results-box { background: var(--surface-2); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 2rem; display: flex; flex-direction: column; justify-content: space-between; }
-.res-val { font-family: 'Sora', sans-serif; font-size: 2.4rem; font-weight: 800; color: var(--accent-2); margin-top: 0.25rem; }
-.breakdown-item { display: flex; justify-content: space-between; font-size: 0.88rem; color: var(--white-65); padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-.cta-btn { background: var(--accent); color: var(--white); padding: 0.9rem; border-radius: 100px; text-decoration: none; font-weight: 600; text-align: center; margin-top: 1.5rem; display: block; transition: 0.2s; }
-.cta-btn:hover { background: #3d5be0; }
-@media (max-width: 768px) { .calc-card { grid-template-columns: 1fr; padding: 1.5rem; } }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courier Landed Cost & Volumetric Auditor</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #0d1117; --card: #161b22; --text: #c9d1d9; --accent: #4F6EF7; --red: #f85149; --green: #2ea043; --border: #30363d; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); padding: 2rem; line-height: 1.6; }
+        h1, h2 { font-family: 'Sora', sans-serif; color: #fff; margin-top: 0; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1000px; margin: 0 auto; }
+        .card { background: var(--card); padding: 2rem; border-radius: 12px; border: 1px solid var(--border); }
+        label { display: block; margin-top: 15px; font-size: 0.85rem; font-weight: 500; color: #8b949e; text-transform: uppercase; }
+        input { width: 100%; padding: 10px; margin-top: 5px; background: var(--bg); color: #fff; border: 1px solid var(--border); border-radius: 6px; box-sizing: border-box; }
+        .output-box { margin-top: 20px; padding: 20px; background: var(--bg); border-radius: 8px; border-left: 4px solid var(--accent); }
+        .metric { font-size: 1.8rem; font-weight: 700; color: #fff; display: block; }
+    </style>
 </head>
 <body>
-<nav>
-  <a href="index.html">G<span>M</span>urtuza</a>
-  <a href="index.html#contact" style="color:var(--accent);">Consulting Services →</a>
-</nav>
-<div class="container">
-  <h1 style="font-family:'Sora',sans-serif;font-size:2.2rem;margin-bottom:0.75rem;">Pakistan Courier Landed Cost Matrix</h1>
-  <p style="color:var(--white-65);margin-bottom:2.5rem;">Expose hidden fees. Calculate fuel adjustment surcharges (FAS), provincial GST, and COD collection tariffs before they eat your product margin.</p>
-  
-  <div class="calc-card">
-    <div>
-      <div class="field">
-        <label for="courier">Select Courier Partner</label>
-        <select id="courier">
-          <option value="trax">Trax Logistics</option>
-          <option value="tcs">TCS Express</option>
-          <option value="leopards">Leopards Courier</option>
-          <option value="postex">PostEx</option>
-          <option value="callcourier">CallCourier</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="destination">Delivery Destination Zone</label>
-        <select id="destination">
-          <option value="local">Within Same City (Local)</option>
-          <option value="zoneA">Major Cities (Zone A - Karachi/Lhe/Isb)</option>
-          <option value="zoneB">Rest of Pakistan (Zone B / Rural)</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="weight">Parcel Weight (kg)</label>
-        <input type="number" id="weight" value="0.5" min="0.5" max="30" step="0.5">
-      </div>
-      <div class="field">
-        <label for="codAmount">Order COD Value (PKR)</label>
-        <input type="number" id="codAmount" value="3200" min="500" max="100000" step="100">
-      </div>
+    <div style="max-width: 1000px; margin: 0 auto 2rem;">
+        <a href="index.html" style="color:var(--accent); text-decoration:none;">&larr; Back to Portfolio</a>
+        <h1 style="margin-top: 10px;">Landed Courier Cost & Volumetric Leak Auditor</h1>
+        <p>Stop paying for cardboard air. Audit your true per-parcel invoice cost.</p>
     </div>
-    
-    <div class="results-box">
-      <div>
-        <span style="font-size:0.75rem;text-transform:uppercase;color:var(--white-65);font-weight:700;">Total Landed Cost / Parcel</span>
-        <div class="res-val" id="totalLanded">Rs. 320</div>
-        
-        <div style="margin-top:1.5rem;">
-          <div class="breakdown-item"><span>Base Freight:</span><span id="bFreight">Rs. 180</span></div>
-          <div class="breakdown-item"><span>Fuel Surcharge (FAS):</span><span id="bFas">Rs. 18</span></div>
-          <div class="breakdown-item"><span>Provincial GST:</span><span id="bTax">Rs. 31</span></div>
-          <div class="breakdown-item"><span>COD Handling Commission:</span><span id="bCod">Rs. 75</span></div>
-          <div class="breakdown-item"><span>Flyer / Packaging Material:</span><span>Rs. 16</span></div>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Your Contracted Rates</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div><label>Base Rate (1st kg)</label><input type="number" id="base_rate" value="180"></div>
+                <div><label>Additional KG Rate</label><input type="number" id="add_rate" value="150"></div>
+                <div><label>FAS Surcharge (%)</label><input type="number" id="fas" value="18"></div>
+                <div><label>Sales Tax (GST/PRA %)</label><input type="number" id="gst" value="15"></div>
+                <div><label>COD Handling Fee (%)</label><input type="number" id="cod_fee" value="2.5"></div>
+                <div><label>Flyer/Packaging Cost</label><input type="number" id="flyer" value="25"></div>
+            </div>
+            
+            <h3 style="margin-top: 20px; color:#8b949e; font-size:0.9rem;">Parcel Reality</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                <div><label>L (cm)</label><input type="number" id="dim_l" value="30"></div>
+                <div><label>W (cm)</label><input type="number" id="dim_w" value="20"></div>
+                <div><label>H (cm)</label><input type="number" id="dim_h" value="15"></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div><label>Dead Weight (KG)</label><input type="number" id="dead_w" value="0.8"></div>
+                <div><label>Parcel COD Value</label><input type="number" id="order_val" value="4500"></div>
+            </div>
         </div>
-      </div>
-      
-      <a id="courierWhatsappCta" href="https://wa.me/923103479022" target="_blank" rel="noopener" class="cta-btn">Audit My Logistics Contracts ↗</a>
+
+        <div class="card">
+            <h2>Audit Results</h2>
+            <div class="output-box" id="vol_warning"></div>
+            <div class="output-box">
+                <span style="color:#8b949e; font-size:0.85rem;">True Landed Courier Deduction</span>
+                <span class="metric" id="total_cost">PKR 0</span>
+            </div>
+            <canvas id="costChart" style="margin-top:20px;"></canvas>
+        </div>
     </div>
-  </div>
-</div>
 
-<script>
-const rates = {
-  trax: { base: {local: 150, zoneA: 210, zoneB: 280}, fas: 0.08, gst: 0.15, cod: 0.025, minCod: 50 },
-  tcs: { base: {local: 190, zoneA: 260, zoneB: 360}, fas: 0.10, gst: 0.16, cod: 0.025, minCod: 60 },
-  leopards: { base: {local: 160, zoneA: 220, zoneB: 310}, fas: 0.09, gst: 0.15, cod: 0.025, minCod: 50 },
-  postex: { base: {local: 140, zoneA: 195, zoneB: 270}, fas: 0.06, gst: 0.15, cod: 0.020, minCod: 40 },
-  callcourier: { base: {local: 155, zoneA: 215, zoneB: 290}, fas: 0.08, gst: 0.15, cod: 0.025, minCod: 50 }
-};
+    <script>
+        let costChart;
+        function auditCourier() {
+            const base = Number(document.getElementById('base_rate').value);
+            const add = Number(document.getElementById('add_rate').value);
+            const fas = Number(document.getElementById('fas').value) / 100;
+            const gst = Number(document.getElementById('gst').value) / 100;
+            const cod_fee = Number(document.getElementById('cod_fee').value) / 100;
+            const flyer = Number(document.getElementById('flyer').value);
+            
+            const l = Number(document.getElementById('dim_l').value);
+            const w = Number(document.getElementById('dim_w').value);
+            const h = Number(document.getElementById('dim_h').value);
+            const dead = Number(document.getElementById('dead_w').value);
+            const val = Number(document.getElementById('order_val').value);
 
-function recalc() {
-  const c = document.getElementById('courier').value;
-  const z = document.getElementById('destination').value;
-  const w = Math.max(0.5, parseFloat(document.getElementById('weight').value) || 0.5);
-  const val = parseFloat(document.getElementById('codAmount').value) || 0;
-  
-  const cur = rates[c];
-  let freight = cur.base[z];
-  if (w > 1) { freight += Math.ceil(w - 1) * (freight * 0.65); }
-  
-  const fas = freight * cur.fas;
-  const tax = (freight + fas) * cur.gst;
-  const cod = Math.max(cur.minCod, val * cur.cod);
-  const total = Math.round(freight + fas + tax + cod + 16);
-  
-  document.getElementById('totalLanded').innerText = 'Rs. ' + total.toLocaleString();
-  document.getElementById('bFreight').innerText = 'Rs. ' + Math.round(freight);
-  document.getElementById('bFas').innerText = 'Rs. ' + Math.round(fas);
-  document.getElementById('bTax').innerText = 'Rs. ' + Math.round(tax);
-  document.getElementById('bCod').innerText = 'Rs. ' + Math.round(cod);
-  
-  const msg = encodeURIComponent(`Hi Ghulam, I tested my parcel landed cost on your courier matrix:\n- Courier: ${c.toUpperCase()}\n- Zone: ${z}\n- COD Value: Rs. ${val}\n- Landed Cost: Rs. ${total}\nI want to audit our courier volume and RTO losses.`);
-  document.getElementById('courierWhatsappCta').href = `https://wa.me/923103479022?text=${msg}`;
-}
+            const vol_weight = (l * w * h) / 5000;
+            const billed_weight = Math.max(dead, vol_weight);
+            const billed_kg = Math.ceil(billed_weight);
 
-['courier','destination','weight','codAmount'].forEach(id => document.getElementById(id).addEventListener('input', recalc));
-recalc();
-</script>
+            let freight = base;
+            if(billed_kg > 1) freight += (billed_kg - 1) * add;
+
+            const fas_amt = freight * fas;
+            const subtotal = freight + fas_amt;
+            const gst_amt = subtotal * gst;
+            const cod_amt = val * cod_fee;
+            
+            const total = freight + fas_amt + gst_amt + cod_amt + flyer;
+
+            const warnBox = document.getElementById('vol_warning');
+            if(vol_weight > dead && Math.ceil(vol_weight) > Math.ceil(dead)) {
+                warnBox.style.borderLeftColor = "var(--red)";
+                warnBox.innerHTML = `<strong style="color:var(--red)">Volumetric Trap Detected!</strong><br>Your item weighs ${dead}kg, but your box size bills at ${billed_weight.toFixed(2)}kg. You are paying for the ${billed_kg}kg slab.`;
+            } else {
+                warnBox.style.borderLeftColor = "var(--green)";
+                warnBox.innerHTML = `<strong style="color:var(--green)">Packaging Optimized</strong><br>Your box dimensions do not trigger higher weight slabs.`;
+            }
+
+            document.getElementById('total_cost').innerText = 'PKR ' + total.toFixed(0);
+
+            const ctx = document.getElementById('costChart').getContext('2d');
+            if(costChart) costChart.destroy();
+            costChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Base Freight', 'FAS', 'Sales Tax', 'COD Fee', 'Packaging'],
+                    datasets: [{
+                        data: [freight, fas_amt, gst_amt, cod_amt, flyer],
+                        backgroundColor: ['#4F6EF7', '#f85149', '#d29922', '#2ea043', '#8b949e'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, cutout: '70%', plugins: { legend: { position: 'right', labels: {color: '#c9d1d9'} } } }
+            });
+        }
+        document.querySelectorAll('input').forEach(i => i.addEventListener('input', auditCourier));
+        auditCourier();
+    </script>
 </body>
 </html>

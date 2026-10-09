@@ -5,110 +5,145 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>COD Ad Profitability Engine | Ghulam Murtuza</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #0d1117; --card: #161b22; --text: #c9d1d9; --accent: #58a6ff; --red: #f85149; --green: #2ea043; }
-        body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; }
-        .container { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .card { background: var(--card); padding: 20px; border-radius: 8px; border: 1px solid #30363d; }
-        h1, h2, h3 { color: #fff; margin-top: 0; }
-        label { display: block; margin-top: 10px; font-size: 0.9em; }
-        input[type="number"], input[type="range"] { width: 100%; padding: 8px; margin-top: 5px; background: var(--bg); color: #fff; border: 1px solid #30363d; border-radius: 4px; box-sizing: border-box; }
-        .metric { font-size: 1.5em; font-weight: bold; margin-top: 10px; }
+        :root { --bg: #0d1117; --card: #161b22; --text: #c9d1d9; --accent: #4F6EF7; --red: #f85149; --green: #2ea043; --border: #30363d; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); padding: 2rem; line-height: 1.6; }
+        h1, h2 { font-family: 'Sora', sans-serif; color: #fff; margin-top: 0; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .card { background: var(--card); padding: 2rem; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        label { display: block; margin-top: 15px; font-size: 0.85rem; font-weight: 500; color: #8b949e; text-transform: uppercase; letter-spacing: 0.05em; }
+        input[type="number"], input[type="range"] { width: 100%; padding: 10px; margin-top: 5px; background: var(--bg); color: #fff; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; }
+        .output-box { margin-top: 20px; padding: 20px; background: var(--bg); border-radius: 8px; border-left: 4px solid var(--accent); }
+        .metric { font-size: 1.8rem; font-weight: 700; font-family: 'Sora', sans-serif; display: block; margin-bottom: 10px; }
         .text-red { color: var(--red); } .text-green { color: var(--green); } .text-accent { color: var(--accent); }
-        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
+    <div style="max-width: 1200px; margin: 0 auto 2rem;">
+        <a href="index.html" style="color:var(--accent); text-decoration:none;">&larr; Back to Portfolio</a>
+        <h1 style="margin-top: 10px;">COD Ad Profitability Engine</h1>
+        <p>Calculate your true return on ad spend across Meta (Impulse) and Google (Intent).</p>
+    </div>
 
-<div class="container">
-    <!-- Meta Ads Calculator -->
-    <div class="card">
-        <h2>Meta Ads: True COD ROAS</h2>
-        <p style="font-size:0.85em; color:#8b949e;">Strips phantom revenue to show actual banked cash.</p>
-        
-        <label>Daily Ad Spend (PKR)</label>
-        <input type="number" id="m_spend" value="10000">
-        
-        <label>Reported Cost Per Purchase (CPP)</label>
-        <input type="number" id="m_cpp" value="1000">
-        
-        <label>Average Order Value (AOV)</label>
-        <input type="number" id="m_aov" value="3500">
-        
-        <label>Cost of Goods Sold (COGS per unit)</label>
-        <input type="number" id="m_cogs" value="1200">
-        
-        <label>RTO Rate (%) <span id="rto_val">25</span>%</label>
-        <input type="range" id="m_rto" min="0" max="60" value="25" oninput="document.getElementById('rto_val').innerText=this.value; calculateMeta();">
-        
-        <label>Reverse Shipping Penalty (PKR)</label>
-        <input type="number" id="m_rev" value="250">
-        
-        <div style="margin-top: 20px; padding: 15px; background: #0d1117; border-radius: 6px;">
-            <div>Reported ROAS: <span class="metric text-accent" id="m_rep_roas">0</span></div>
-            <div>True Delivered ROAS: <span class="metric text-red" id="m_true_roas">0</span></div>
-            <div>Net Banked Profit: <span class="metric text-green" id="m_net">0</span></div>
+    <div class="grid">
+        <!-- Meta Engine -->
+        <div class="card">
+            <h2>Meta Ads: Phantom ROAS Stripper</h2>
+            <p style="font-size:0.9rem; color:#8b949e;">Meta reports checkout clicks. This calculates actual delivered cash.</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div><label>Ad Spend (PKR)</label><input type="number" id="m_spend" value="10000"></div>
+                <div><label>Cost Per Purchase (CPP)</label><input type="number" id="m_cpp" value="1000"></div>
+                <div><label>Order Value (AOV)</label><input type="number" id="m_aov" value="3500"></div>
+                <div><label>COGS (Product Cost)</label><input type="number" id="m_cogs" value="1200"></div>
+            </div>
+            
+            <label>RTO Rate (%) <span id="rto_val" style="color:#fff;">25</span>%</label>
+            <input type="range" id="m_rto" min="0" max="60" value="25" oninput="document.getElementById('rto_val').innerText=this.value; calcMeta();">
+            
+            <label>Courier RTO Penalty (PKR)</label>
+            <input type="number" id="m_rev" value="250">
+            
+            <div class="output-box">
+                <span style="color:#8b949e; font-size:0.85rem;">Meta Reported ROAS vs True ROAS</span>
+                <div style="display:flex; gap:20px; align-items:flex-end;">
+                    <span class="metric text-accent" id="m_rep_roas">0x</span>
+                    <span class="metric text-red" id="m_true_roas">0x</span>
+                </div>
+                <span style="color:#8b949e; font-size:0.85rem; margin-top:10px; display:block;">Net Banked Cash</span>
+                <span class="metric text-green" id="m_net">PKR 0</span>
+            </div>
+            <canvas id="metaChart" style="margin-top:20px;"></canvas>
+        </div>
+
+        <!-- Google Engine -->
+        <div class="card">
+            <h2>Google Ads: Max CPC Ceiling</h2>
+            <p style="font-size:0.9rem; color:#8b949e;">Find the exact bid limit for high-intent search before margins break.</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div><label>Product Price (PKR)</label><input type="number" id="g_price" value="4500"></div>
+                <div><label>Landed COGS (PKR)</label><input type="number" id="g_cogs" value="1500"></div>
+                <div><label>Fulfillment/Shipping (PKR)</label><input type="number" id="g_ship" value="250"></div>
+                <div><label>Store Conv. Rate (%)</label><input type="number" id="g_cvr" value="2.5"></div>
+            </div>
+
+            <label>Expected Delivery Success (%) <span id="del_val" style="color:#fff;">85</span>%</label>
+            <input type="range" id="g_del" min="50" max="100" value="85" oninput="document.getElementById('del_val').innerText=this.value; calcGoogle();">
+            
+            <label>Target Net Profit Per Order (PKR)</label>
+            <input type="number" id="g_target" value="1000">
+
+            <div class="output-box">
+                <span style="color:#8b949e; font-size:0.85rem;">Maximum Allowable CPA (Cost Per Acquisition)</span>
+                <span class="metric text-accent" id="g_cpa">PKR 0</span>
+                <span style="color:#8b949e; font-size:0.85rem; margin-top:10px; display:block;">Max CPC Ceiling (Bid Limit)</span>
+                <span class="metric text-red" id="g_cpc">PKR 0</span>
+            </div>
         </div>
     </div>
 
-    <div class="card">
-        <canvas id="metaChart"></canvas>
-    </div>
-</div>
+    <script>
+        let metaChart;
+        function calcMeta() {
+            const spend = Number(document.getElementById('m_spend').value);
+            const cpp = Number(document.getElementById('m_cpp').value);
+            const aov = Number(document.getElementById('m_aov').value);
+            const cogs = Number(document.getElementById('m_cogs').value);
+            const rto = Number(document.getElementById('m_rto').value) / 100;
+            const rev_pen = Number(document.getElementById('m_rev').value);
 
-<script>
-    let metaChart;
+            const total_orders = spend / cpp;
+            document.getElementById('m_rep_roas').innerText = ((total_orders * aov) / spend).toFixed(2) + 'x';
 
-    function calculateMeta() {
-        const spend = parseFloat(document.getElementById('m_spend').value);
-        const cpp = parseFloat(document.getElementById('m_cpp').value);
-        const aov = parseFloat(document.getElementById('m_aov').value);
-        const cogs = parseFloat(document.getElementById('m_cogs').value);
-        const rto = parseFloat(document.getElementById('m_rto').value) / 100;
-        const rev_pen = parseFloat(document.getElementById('m_rev').value);
+            const delivered = total_orders * (1 - rto);
+            const actual_rev = delivered * aov;
+            const total_cogs = delivered * cogs; 
+            const fwd_ship = total_orders * 220; // Avg forward
+            const rto_loss = (total_orders * rto) * rev_pen;
+            
+            const net = actual_rev - total_cogs - spend - fwd_ship - rto_loss;
+            
+            document.getElementById('m_true_roas').innerText = (actual_rev / spend).toFixed(2) + 'x';
+            document.getElementById('m_net').innerText = 'PKR ' + net.toFixed(0);
 
-        const total_orders = spend / cpp;
-        const rep_revenue = total_orders * aov;
-        const rep_roas = rep_revenue / spend;
+            const ctx = document.getElementById('metaChart').getContext('2d');
+            if(metaChart) metaChart.destroy();
+            metaChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Revenue', 'COGS', 'Ad Spend', 'Shipping', 'RTO Penalty', 'Net Profit'],
+                    datasets: [{
+                        data: [actual_rev, -total_cogs, -spend, -fwd_ship, -rto_loss, net],
+                        backgroundColor: ['#2ea043', '#f85149', '#f85149', '#f85149', '#f85149', net > 0 ? '#4F6EF7' : '#f85149']
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
+        }
 
-        const delivered_orders = total_orders * (1 - rto);
-        const rto_orders = total_orders * rto;
-        
-        const actual_revenue = delivered_orders * aov;
-        const total_cogs = delivered_orders * cogs; // Assuming RTO stock is recovered
-        const total_rto_penalty = rto_orders * rev_pen;
-        const courier_fwd = delivered_orders * 200; // Base forward shipping estimate
-        
-        const net_profit = actual_revenue - total_cogs - spend - courier_fwd - total_rto_penalty;
-        const true_roas = actual_revenue / spend;
+        function calcGoogle() {
+            const price = Number(document.getElementById('g_price').value);
+            const cogs = Number(document.getElementById('g_cogs').value);
+            const ship = Number(document.getElementById('g_ship').value);
+            const cvr = Number(document.getElementById('g_cvr').value) / 100;
+            const del_rate = Number(document.getElementById('g_del').value) / 100;
+            const target = Number(document.getElementById('g_target').value);
 
-        document.getElementById('m_rep_roas').innerText = rep_roas.toFixed(2) + 'x';
-        document.getElementById('m_true_roas').innerText = true_roas.toFixed(2) + 'x';
-        document.getElementById('m_net').innerText = 'PKR ' + net_profit.toFixed(0);
+            // Gross profit considering delivery rate and assuming RTO means lost shipping but recovered COGS
+            const gross_profit_per_order = (price * del_rate) - cogs - ship; 
+            const max_cpa = gross_profit_per_order - target;
+            const max_cpc = max_cpa * cvr;
 
-        updateChart(actual_revenue, total_cogs, spend, courier_fwd, total_rto_penalty, net_profit);
-    }
+            document.getElementById('g_cpa').innerText = 'PKR ' + max_cpa.toFixed(0);
+            document.getElementById('g_cpc').innerText = 'PKR ' + max_cpc.toFixed(2);
+        }
 
-    function updateChart(rev, cogs, spend, fwd, rto_pen, net) {
-        const ctx = document.getElementById('metaChart').getContext('2d');
-        if(metaChart) metaChart.destroy();
-        
-        metaChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Gross Revenue', 'COGS', 'Ad Spend', 'Shipping', 'RTO Penalty', 'Net Profit'],
-                datasets: [{
-                    label: 'PKR',
-                    data: [rev, -cogs, -spend, -fwd, -rto_pen, net],
-                    backgroundColor: ['#2ea043', '#f85149', '#f85149', '#f85149', '#f85149', net > 0 ? '#2ea043' : '#f85149']
-                }]
-            },
-            options: { responsive: true, plugins: { legend: { display: false } } }
-        });
-    }
-
-    document.querySelectorAll('input').forEach(i => i.addEventListener('input', calculateMeta));
-    calculateMeta();
-</script>
+        document.querySelectorAll('#m_spend, #m_cpp, #m_aov, #m_cogs, #m_rev').forEach(i => i.addEventListener('input', calcMeta));
+        document.querySelectorAll('#g_price, #g_cogs, #g_ship, #g_cvr, #g_target').forEach(i => i.addEventListener('input', calcGoogle));
+        calcMeta(); calcGoogle();
+    </script>
 </body>
 </html>
