@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Studio | Automated Publisher</title>
+    <style>
+        body { background: #0d1117; color: #c9d1d9; font-family: monospace; padding: 20px; }
+        .panel { border: 1px solid #30363d; padding: 20px; background: #161b22; margin-bottom: 20px; border-radius: 6px; }
+        input, textarea, select { width: 100%; background: #0d1117; color: #fff; border: 1px solid #30363d; padding: 10px; margin: 5px 0 15px 0; box-sizing: border-box; }
+        button { background: #238636; color: #fff; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        button:hover { background: #2ea043; }
+        .dropzone { border: 2px dashed #30363d; padding: 20px; text-align: center; color: #8b949e; margin-bottom: 15px; }
+        .log { background: #000; padding: 10px; color: #0f0; height: 150px; overflow-y: scroll; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<div class="panel">
+    <h3>1. Config (Saved Locally)</h3>
+    <input type="password" id="gh_pat" placeholder="GitHub PAT (github_pat_...)">
+    <input type="text" id="gh_repo" value="murtuzag814/murtuzag814.github.io" placeholder="user/repo">
+    <button onclick="saveConfig()">Save Config</button>
+</div>
+
+<div class="panel">
+    <h3>2. Post Metadata</h3>
+    <label>Title</label><input type="text" id="p_title">
+    <label>Slug (URL)</label><input type="text" id="p_slug">
+    <label>Category</label><input type="text" id="p_category" value="Operations">
+    <label>Direct Answer (GEO Snippet - max 60 words)</label>
+    <textarea id="p_direct" rows="3"></textarea>
+    
+    <label>Cover Image</label>
+    <div class="dropzone" id="dz_cover">Drag & Drop Cover Image Here</div>
+    <input type="hidden" id="cover_b64">
+</div>
+
+<div class="panel">
+    <h3>3. Content Builder</h3>
+    <div id="sections"></div>
+    <button onclick="addSection()">+ Add Section</button>
+</div>
+
+<button onclick="publishPost()" style="width: 100%; font-size: 18px; padding: 15px;">🚀 PUBLISH TO GITHUB</button>
+
+<div class="panel" style="margin-top:20px;">
+    <h3>Execution Log</h3>
+    <div class="log" id="log">System ready...<br></div>
+</div>
+
+<script>
+    function log(msg) { document.getElementById('log').innerHTML += msg + '<br>'; }
+    function saveConfig() {
+        localStorage.setItem('gh_pat', document.getElementById('gh_pat').value);
+        localStorage.setItem('gh_repo', document.getElementById('gh_repo').value);
+        log("Config saved to localStorage.");
+    }
+    window.onload = () => {
+        if(localStorage.getItem('gh_pat')) document.getElementById('gh_pat').value = localStorage.getItem('gh_pat');
+        if(localStorage.getItem('gh_repo')) document.getElementById('gh_repo').value = localStorage.getItem('gh_repo');
+        setupDropzone(document.getElementById('dz_cover'), 'cover_b64');
+    };
+
+    function setupDropzone(el, hiddenId) {
+        el.ondragover = e => { e.preventDefault(); el.style.borderColor = '#58a6ff'; };
+        el.ondragleave = e => { e.preventDefault(); el.style.borderColor = '#30363d'; };
+        el.ondrop = e => {
+            e.preventDefault();
+            el.style.borderColor = '#238636';
+            const file = e.dataTransfer.files[0];
+            const reader = new FileReader();
+            reader.onload = event => {
+                document.getElementById(hiddenId).value = event.target.result.split(',')[1];
+                el.innerText = file.name + " (Ready)";
+            };
+            reader.readAsDataURL(file);
+        };
+    }
+
+    let sectionCount = 0;
+    function addSection() {
+        sectionCount++;
+        const div = document.createElement('div');
+        div.innerHTML = `
+            <hr style="border-color:#30363d; margin: 20px 0;">
+            <select id="h_type_${sectionCount}"><option value="h2">H2</option><option value="h3">H3</option></select>
+            <input type="text" id="h_text_${sectionCount}" placeholder="Heading">
+            <textarea id="p_text_${sectionCount}" rows="5" placeholder="Markdown/HTML body content..."></textarea>
+            <div class="dropzone" id="dz_${sectionCount}">Drag Image for this section (Optional)</div>
+            <input type="hidden" id="img_${sectionCount}">
+        `;
+        document.getElementById('sections').appendChild(div);
+        setupDropzone(document.getElementById(`dz_${sectionCount}`), `img_${sectionCount}`);
+    }
+
+    async function ghFetch(path, method, body = null) {
+        const repo = document.getElementById('gh_repo').value;
+        const pat = document.getElementById('gh_pat').value;
+        const opts = { method, headers: { 'Authorization': `Bearer ${pat}`, 'Content-Type': 'application/json' } };
+        if(body) opts.body = JSON.stringify(body);
+        const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, opts);
+        return res;
+    }
+
+    async function publishPost() {
+        const title = document.getElementById('p_title').value;
+        const slug = document.getElementById('p_slug').value;
+        const direct = document.getElementById('p_direct').value;
+        const date = new Date().toISOString().split('T')[0];
+
+        log(`Starting build process for: ${slug}`);
+
+        // 1. Upload Cover Image
+        const coverB64 = document.getElementById('cover_b64').value;
+        if(coverB64) {
+            log("Uploading cover image...");
+            await ghFetch(`posts/images/${slug}-cover.jpg`, 'PUT', { message: `Upload cover for ${slug}`, content: coverB64 });
+        }
+
+        // 2. Build HTML Body
+        let bodyHtml = `<aside style="background:#161b22; padding:15px; border-left:4px solid #58a6ff; margin-bottom:20px;"><strong>Direct Answer:</strong> ${direct}</aside>`;
+        
+        for(let i=1; i<=sectionCount; i++) {
+            const hType = document.getElementById(`h_type_${i}`).value;
+            const hText = document.getElementById(`h_text_${i}`).value;
+            const pText = document.getElementById(`p_text_${i}`).value;
+            const imgB64 = document.getElementById(`img_${i}`).value;
+            
+            bodyHtml += `<${hType}>${hText}</${hType}>\n<p>${pText.replace(/\n/g, '<br>')}</p>\n`;
+            
+            if(imgB64) {
+                const imgPath = `posts/images/${slug}-${i}.jpg`;
+                log(`Uploading section ${i} image...`);
+                await ghFetch(imgPath, 'PUT', { message: `Upload img for ${slug}`, content: imgB64 });
+                bodyHtml += `<figure><img src="/${imgPath}" loading="lazy" style="max-width:100%; height:auto;" alt="${hText}"></figure>\n`;
+            }
+        }
+
+        const fullHtml = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>${title}</title><meta name="description" content="${direct}"><link rel="stylesheet" href="/style.css"></head><body style="background:#0d1117; color:#c9d1d9; max-width:800px; margin:0 auto; padding:20px;"><h1>${title}</h1><p><small>${date}</small></p>${bodyHtml}</body></html>`;
+
+        // 3. Upload HTML File
+        log("Compiling and uploading HTML file...");
+        await ghFetch(`posts/${slug}.html`, 'PUT', { message: `Publish ${slug}`, content: btoa(unescape(encodeURIComponent(fullHtml))) });
+
+        // 4. Update posts.json
+        log("Updating posts.json registry...");
+        const getRegistry = await ghFetch('posts.json', 'GET');
+        let registryData = [];
+        let sha = null;
+        if(getRegistry.ok) {
+            const data = await getRegistry.json();
+            registryData = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+            sha = data.sha;
+        }
+        
+        registryData.unshift({ title, slug, date, category: document.getElementById('p_category').value, excerpt: direct, thumbnail: `/posts/images/${slug}-cover.jpg` });
+        
+        const updatePayload = { message: `Update posts.json with ${slug}`, content: btoa(unescape(encodeURIComponent(JSON.stringify(registryData, null, 2)))) };
+        if(sha) updatePayload.sha = sha;
+        await ghFetch('posts.json', 'PUT', updatePayload);
+
+        log("✅ PUBLISH COMPLETE. GitHub Pages is building. Live in ~30 seconds.");
+    }
+</script>
+</body>
+</html>
