@@ -177,8 +177,25 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
+  
+/* Tool Tabs CSS */
+.tools-hub { background: var(--surface-3); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; }
+.tool-tabs { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 10px; }
+.tool-tab-btn { background: var(--glass); color: var(--white-70); border: 1px solid var(--glass-border); padding: 12px 24px; border-radius: 100px; cursor: pointer; font-weight: 600; white-space: nowrap; transition: all 0.2s; font-family: 'Sora', sans-serif; font-size: 0.85rem;}
+.tool-tab-btn:hover { background: var(--glass-hover); color: var(--white); }
+.tool-tab-btn.active { background: var(--accent); color: var(--white); border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+.tool-content { display: none; animation: fadeIn 0.3s ease; }
+.tool-content.active { display: block; }
+
+.calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.calc-card { background: var(--surface-2); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); }
+.calc-label { display: block; margin-top: 15px; font-size: 0.8rem; font-weight: 700; color: var(--white-45); text-transform: uppercase; letter-spacing: 0.05em; }
+.calc-input { width: 100%; padding: 10px; margin-top: 5px; background: var(--surface); color: var(--white); border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; font-family: monospace;}
+.calc-output { margin-top: 20px; padding: 20px; background: var(--surface); border-radius: 8px; border-left: 4px solid var(--accent); }
+.calc-metric { font-size: 1.8rem; font-weight: 800; font-family: 'Sora', sans-serif; display: block; margin-bottom: 5px; color: var(--white); }
+@media (max-width: 768px) { .calc-grid { grid-template-columns: 1fr; } .tools-hub { padding: 1.25rem; } }
 /* ======= SKIP LINK ======= */
 .skip-link {
   position: absolute; top: -100px; left: 1rem; z-index: 9999;
@@ -836,34 +853,208 @@ footer a:hover { color: var(--accent); }
 <!-- FREE TOOLS SECTION -->
 <section id="tools" style="background:var(--surface);">
   <div class="section-inner">
-    <span class="section-label reveal">Free Operations &amp; Marketing Utilities</span>
-    <h2 class="section-title reveal">Free D2C Operations Calculators</h2>
-    <p class="section-sub reveal">Interactive micro-assets built specifically for Pakistani D2C founders to calculate real landed shipping costs, required ad ROAS, and discount unit margins.</p>
-    <div class="services-grid reveal">
-      <div class="service-card">
-        <div class="service-num">01</div>
-        <div class="service-abbr">LOGISTICS TOOL</div>
-        <h3 class="service-name">Pakistan Courier Landed Cost Matrix</h3>
-        <p class="service-desc">Calculate true landed shipping costs across TCS, Trax, Leopards, PostEx, and CallCourier, factoring in fuel adjustment surcharges (FAS), GST, and COD handling commissions.</p>
-        <a href="courier-calculator.html" class="project-link" style="margin-top:1.25rem;">Open Courier Calculator ↗</a>
-      </div>
-      <div class="service-card">
-        <div class="service-num">02</div>
-        <div class="service-abbr">ADS TOOL</div>
-        <h3 class="service-name">COD Break-Even ROAS Calculator</h3>
-        <p class="service-desc">Standard formulas don't work in Cash on Delivery markets. Determine your real required target ROAS by accounting for dispatch costs, reverse transit penalties, and high RTO rates.</p>
-        <a href="ad-calculator.html" class="project-link" style="margin-top:1.25rem;">Open ROAS Calculator ↗</a>
-      </div>
-      <div class="service-card">
-        <div class="service-num">03</div>
-        <div class="service-abbr">MARGIN TOOL</div>
-        <h3 class="service-name">Discount vs Profit Margin Simulator</h3>
-        <p class="service-desc">Simulate promotional events and flash sales. Find out the exact volume lift required to maintain your gross profit before running Blessed Friday or Eid discounts.</p>
-        <a href="margin-calculator.html" class="project-link" style="margin-top:1.25rem;">Open Margin Calculator ↗</a>
-      </div>
+    <span class="section-label reveal">Operations & Marketing Utilities</span>
+    <h2 class="section-title reveal">Free D2C Growth Calculators</h2>
+    <p class="section-sub reveal">Run your numbers instantly. No email required.</p>
+    
+    <div class="tools-hub reveal">
+        <div class="tool-tabs">
+            <button class="tool-tab-btn active" onclick="switchTool('tool-courier')">1. Courier Landed Cost Matrix</button>
+            <button class="tool-tab-btn" onclick="switchTool('tool-ads')">2. Meta vs Google ROAS Engine</button>
+            <button class="tool-tab-btn" onclick="switchTool('tool-margin')">3. Flash Sale Volume Trap</button>
+        </div>
+
+        <!-- TOOL 1: COURIER -->
+        <div id="tool-courier" class="tool-content active">
+            <div class="calc-grid">
+                <div class="calc-card">
+                    <h3 style="font-family:'Sora'; margin-bottom:15px; color:var(--white);">Contracted Rates & Parcel Data</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div><label class="calc-label">Base Rate (1st kg)</label><input type="number" class="calc-input" id="c_base" value="180"></div>
+                        <div><label class="calc-label">Additional KG</label><input type="number" class="calc-input" id="c_add" value="150"></div>
+                        <div><label class="calc-label">FAS Surcharge (%)</label><input type="number" class="calc-input" id="c_fas" value="18"></div>
+                        <div><label class="calc-label">Sales Tax (GST %)</label><input type="number" class="calc-input" id="c_gst" value="15"></div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top:10px;">
+                        <div><label class="calc-label">L (cm)</label><input type="number" class="calc-input" id="c_l" value="30"></div>
+                        <div><label class="calc-label">W (cm)</label><input type="number" class="calc-input" id="c_w" value="20"></div>
+                        <div><label class="calc-label">H (cm)</label><input type="number" class="calc-input" id="c_h" value="15"></div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top:10px;">
+                        <div><label class="calc-label">Dead Weight (KG)</label><input type="number" class="calc-input" id="c_dead" value="0.8"></div>
+                        <div><label class="calc-label">Order Value (PKR)</label><input type="number" class="calc-input" id="c_val" value="4500"></div>
+                    </div>
+                </div>
+                <div class="calc-card">
+                    <h3 style="font-family:'Sora'; margin-bottom:15px; color:var(--white);">Invoice Reality</h3>
+                    <div class="calc-output" id="c_warn"></div>
+                    <div class="calc-output">
+                        <span style="color:var(--white-45); font-size:0.85rem; font-weight:bold; text-transform:uppercase;">True Landed Courier Deduction</span>
+                        <span class="calc-metric" id="c_total">PKR 0</span>
+                    </div>
+                    <canvas id="courierChart" style="margin-top:20px; max-height:250px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOOL 2: ADS -->
+        <div id="tool-ads" class="tool-content">
+            <div class="calc-grid">
+                <div class="calc-card">
+                    <h3 style="font-family:'Sora'; margin-bottom:15px; color:var(--white);">Meta Ads: Phantom ROAS Stripper</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div><label class="calc-label">Ad Spend (PKR)</label><input type="number" class="calc-input" id="a_spend" value="10000"></div>
+                        <div><label class="calc-label">Cost Per Purchase</label><input type="number" class="calc-input" id="a_cpp" value="1000"></div>
+                        <div><label class="calc-label">Order Value (AOV)</label><input type="number" class="calc-input" id="a_aov" value="3500"></div>
+                        <div><label class="calc-label">COGS (Product Cost)</label><input type="number" class="calc-input" id="a_cogs" value="1200"></div>
+                    </div>
+                    <label class="calc-label">RTO Rate (%) <span id="a_rto_val" style="color:#fff;">25</span>%</label>
+                    <input type="range" class="calc-input" id="a_rto" min="0" max="60" value="25" oninput="document.getElementById('a_rto_val').innerText=this.value; runAdCalc();">
+                    <label class="calc-label">Courier RTO Penalty (PKR)</label>
+                    <input type="number" class="calc-input" id="a_rev" value="250">
+                    
+                    <div class="calc-output">
+                        <span style="color:var(--white-45); font-size:0.85rem;">True Delivered ROAS</span>
+                        <span class="calc-metric" id="a_true_roas" style="color:#f85149;">0x</span>
+                        <span style="color:var(--white-45); font-size:0.85rem; margin-top:10px; display:block;">Net Banked Profit</span>
+                        <span class="calc-metric" id="a_net" style="color:#2ea043;">PKR 0</span>
+                    </div>
+                </div>
+                <div class="calc-card">
+                    <canvas id="adChart" style="margin-top:20px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOOL 3: MARGIN -->
+        <div id="tool-margin" class="tool-content">
+            <div class="calc-grid">
+                <div class="calc-card">
+                    <h3 style="font-family:'Sora'; margin-bottom:15px; color:var(--white);">Discount vs Volume Trap</h3>
+                    <div><label class="calc-label">Normal Selling Price (PKR)</label><input type="number" class="calc-input" id="m_price" value="3500"></div>
+                    <div><label class="calc-label">Landed COGS + Fulfillment (PKR)</label><input type="number" class="calc-input" id="m_cogs" value="1600"></div>
+                    <div><label class="calc-label">Current Daily Orders</label><input type="number" class="calc-input" id="m_orders" value="50"></div>
+                    <hr style="border-color:var(--border); margin:20px 0;">
+                    <div><label class="calc-label">Proposed Discount (%)</label><input type="number" class="calc-input" id="m_discount" value="20"></div>
+                </div>
+                <div class="calc-card">
+                    <h3 style="font-family:'Sora'; margin-bottom:15px; color:var(--white);">The Reality Check</h3>
+                    <div class="calc-output">
+                        <span style="color:var(--white-45); font-size:0.85rem;">To make the exact same profit, you need:</span>
+                        <span class="calc-metric" id="m_req_orders">0 Orders/Day</span>
+                        <span id="m_inc_text" style="color:#f85149; font-weight:bold; margin-top:5px; display:block;"></span>
+                    </div>
+                    <canvas id="marginChart" style="margin-top:30px;"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
   </div>
 </section>
+
+<!-- SCRIPTS FOR TOOLS -->
+<script>
+    let courierChart, adChart, marginChart;
+
+    function switchTool(toolId) {
+        document.querySelectorAll('.tool-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tool-tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(toolId).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    function runCourierCalc() {
+        const base = Number(document.getElementById('c_base').value);
+        const add = Number(document.getElementById('c_add').value);
+        const fas = Number(document.getElementById('c_fas').value) / 100;
+        const gst = Number(document.getElementById('c_gst').value) / 100;
+        const l = Number(document.getElementById('c_l').value), w = Number(document.getElementById('c_w').value), h = Number(document.getElementById('c_h').value);
+        const dead = Number(document.getElementById('c_dead').value), val = Number(document.getElementById('c_val').value);
+
+        const vol_weight = (l * w * h) / 5000;
+        const billed_weight = Math.max(dead, vol_weight);
+        const billed_kg = Math.ceil(billed_weight);
+
+        let freight = base;
+        if(billed_kg > 1) freight += (billed_kg - 1) * add;
+
+        const fas_amt = freight * fas;
+        const gst_amt = (freight + fas_amt) * gst;
+        const cod_amt = val * 0.025; // standard 2.5%
+        const total = freight + fas_amt + gst_amt + cod_amt + 25; // 25 flyer
+
+        const warn = document.getElementById('c_warn');
+        if(vol_weight > dead && Math.ceil(vol_weight) > Math.ceil(dead)) {
+            warn.style.borderLeftColor = "#f85149";
+            warn.innerHTML = `<strong style="color:#f85149">Volumetric Trap!</strong> Box bills at ${billed_weight.toFixed(2)}kg (Slab: ${billed_kg}kg).`;
+        } else {
+            warn.style.borderLeftColor = "#2ea043";
+            warn.innerHTML = `<strong style="color:#2ea043">Optimized.</strong> No volumetric penalty.`;
+        }
+        document.getElementById('c_total').innerText = 'PKR ' + total.toFixed(0);
+
+        if(courierChart) courierChart.destroy();
+        courierChart = new Chart(document.getElementById('courierChart').getContext('2d'), {
+            type: 'doughnut',
+            data: { labels: ['Base Freight', 'FAS', 'Sales Tax', 'COD Fee', 'Packaging'], datasets: [{ data: [freight, fas_amt, gst_amt, cod_amt, 25], backgroundColor: ['#4F6EF7', '#f85149', '#d29922', '#2ea043', '#8b949e'], borderWidth:0 }] },
+            options: { responsive: true, cutout: '70%', plugins: { legend: { position: 'right', labels:{color:'#c9d1d9'} } } }
+        });
+    }
+
+    function runAdCalc() {
+        const spend = Number(document.getElementById('a_spend').value), cpp = Number(document.getElementById('a_cpp').value);
+        const aov = Number(document.getElementById('a_aov').value), cogs = Number(document.getElementById('a_cogs').value);
+        const rto = Number(document.getElementById('a_rto').value) / 100, rev_pen = Number(document.getElementById('a_rev').value);
+
+        const orders = spend / cpp;
+        const delivered = orders * (1 - rto);
+        const actual_rev = delivered * aov;
+        const total_cogs = delivered * cogs;
+        const fwd_ship = orders * 220; 
+        const rto_loss = (orders * rto) * rev_pen;
+        const net = actual_rev - total_cogs - spend - fwd_ship - rto_loss;
+
+        document.getElementById('a_true_roas').innerText = (actual_rev / spend).toFixed(2) + 'x';
+        document.getElementById('a_net').innerText = 'PKR ' + net.toFixed(0);
+
+        if(adChart) adChart.destroy();
+        adChart = new Chart(document.getElementById('adChart').getContext('2d'), {
+            type: 'bar',
+            data: { labels: ['Revenue', 'COGS', 'Ad Spend', 'Shipping', 'RTO Penalty', 'Net Profit'], datasets: [{ data: [actual_rev, -total_cogs, -spend, -fwd_ship, -rto_loss, net], backgroundColor: ['#2ea043', '#f85149', '#f85149', '#f85149', '#f85149', net>0?'#4F6EF7':'#f85149'] }] },
+            options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+    }
+
+    function runMarginCalc() {
+        const price = Number(document.getElementById('m_price').value), cogs = Number(document.getElementById('m_cogs').value);
+        const orders = Number(document.getElementById('m_orders').value), discount = Number(document.getElementById('m_discount').value) / 100;
+
+        const current_profit = (price - cogs) * orders;
+        const new_margin = (price * (1 - discount)) - cogs;
+        const reqBox = document.getElementById('m_req_orders'), incText = document.getElementById('m_inc_text');
+
+        if (new_margin <= 0) {
+            reqBox.innerText = "IMPOSSIBLE"; incText.innerText = "You lose money on every unit sold.";
+            if(marginChart) marginChart.destroy(); return;
+        }
+
+        const req_orders = Math.ceil(current_profit / new_margin);
+        reqBox.innerText = req_orders + ' Orders/Day';
+        incText.innerText = `${(((req_orders - orders)/orders)*100).toFixed(0)}% volume increase needed to break even.`;
+
+        if(marginChart) marginChart.destroy();
+        marginChart = new Chart(document.getElementById('marginChart').getContext('2d'), {
+            type: 'bar',
+            data: { labels: ['Current Orders', 'Required Orders on Sale'], datasets: [{ data: [orders, req_orders], backgroundColor: ['#30363d', '#d29922'], borderRadius: 6 }] },
+            options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { grid:{color:'#30363d'}, ticks:{color:'#8b949e'} }, x:{ticks:{color:'#c9d1d9'}} } }
+        });
+    }
+
+    document.querySelectorAll('#tool-courier input').forEach(i => i.addEventListener('input', runCourierCalc));
+    document.querySelectorAll('#tool-ads input').forEach(i => i.addEventListener('input', runAdCalc));
+    document.querySelectorAll('#tool-margin input').forEach(i => i.addEventListener('input', runMarginCalc));
+    setTimeout(() => { runCourierCalc(); runAdCalc(); runMarginCalc(); }, 500);
+</script>
 
 <!-- ABOUT -->
 <section id="about">
@@ -1054,36 +1245,39 @@ footer a:hover { color: var(--accent); }
 <section id="faq" style="background:var(--surface);">
   <div class="section-inner">
     <span class="section-label reveal">People also ask</span>
-    <h2 class="section-title reveal">Frequently Asked Questions</h2>
+    <h2 class="section-title reveal">Common questions asked</h2>
     <p class="section-sub reveal">Common questions about e-commerce operations, CRO, GEO, and working with Ghulam Murtuza.</p>
-    <div style="display:flex;flex-direction:column;gap:0.75rem;max-width:760px">
-      <details class="faq-item reveal" open>
-        <summary class="faq-q">What does an E-Commerce Growth Strategist in Karachi do?</summary>
-        <p class="faq-a">An <strong>e-commerce growth strategist in Karachi</strong> like Ghulam Murtuza focuses on full-funnel optimization for Pakistani D2C brands. This includes scaling high-intent traffic via SEO and GEO, fixing frontend conversions via CRO, and protecting profit margins by reducing RTO and optimizing last-mile delivery operations.</p>
-      </details>
-
-      <details class="faq-item reveal">
-        <summary class="faq-q">How did Ghulam Murtuza reduce RTO by 40% for a Pakistani fashion brand?</summary>
-        <p class="faq-a">After analysing 50,000+ orders at a leading Pakistani fashion D2C brand, <strong>Ghulam Murtuza</strong> identified the root causes of high RTO and implemented operational fixes: address verification at checkout (−22% RTO), pre-delivery confirmation calls (−15% RTO), and COD order capping (−18% RTO). Combined with courier reconciliation, this protected millions in reverse logistics costs.</p>
-      </details>
-
-      <details class="faq-item reveal">
-        <summary class="faq-q">What is Generative Engine Optimization (GEO)?</summary>
-        <p class="faq-a"><strong>Generative Engine Optimization (GEO)</strong> is the process of optimizing your brand so it gets cited by AI search engines like ChatGPT, Perplexity, Gemini, and Claude. When a customer asks "best furniture brands in Karachi" in ChatGPT, GEO determines whether your brand is recommended. It is currently the highest-ROI, lowest-competition discovery channel in Pakistan.</p>
-      </details>
-
-      <details class="faq-item reveal">
-        <summary class="faq-q">Does Ghulam Murtuza offer CRO services for Pakistani businesses?</summary>
-        <p class="faq-a">Yes. <strong>GMurtuza E-Commerce Growth</strong> specializes in Conversion Rate Optimization (CRO) for WooCommerce and Shopify setups. This involves removing checkout friction, optimizing product pages, and improving UX to increase revenue without needing to spend more on Facebook or Google ads.</p>
-      </details>
-
-      <details class="faq-item reveal">
-        <summary class="faq-q">What is the difference between SEO, AEO, and GEO?</summary>
-        <p class="faq-a"><strong>SEO (Search Engine Optimization)</strong> gets your brand ranking on Google's traditional results. <strong>AEO (Answer Engine Optimization)</strong> gets your brand featured in Google's answer boxes and featured snippets. <strong>GEO (Generative Engine Optimization)</strong> gets your brand cited in AI-generated answers from ChatGPT and Claude. A complete growth strategy covers all three.</p>
-      </details>
+    
+    <div id="dynamic-faq-container" style="display:flex;flex-direction:column;gap:0.75rem;max-width:760px">
+      <!-- FAQs will be injected here -->
     </div>
   </div>
 </section>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+    const faqContainer = document.getElementById('dynamic-faq-container');
+    if (faqContainer) {
+        try {
+            const res = await fetch('/faqs.json?t=' + new Date().getTime());
+            if(!res.ok) throw new Error("No faqs.json found");
+            const faqs = await res.json();
+            
+            let html = '';
+            faqs.forEach((faq, i) => {
+                html += `
+                <details class="faq-item reveal" ${i===0 ? 'open' : ''}>
+                    <summary class="faq-q">${faq.q}</summary>
+                    <p class="faq-a">${faq.a}</p>
+                </details>`;
+            });
+            faqContainer.innerHTML = html;
+        } catch (e) {
+            console.error("Error loading FAQs:", e);
+        }
+    }
+});
+</script>
 
 <!-- CONTACT -->
 <section id="contact">
