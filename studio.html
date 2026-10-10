@@ -3,46 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Studio | Automated Publisher</title>
+    <title>Portfolio Studio | CMS</title>
     <style>
-        body { background: #0d1117; color: #c9d1d9; font-family: monospace; padding: 20px; }
+        body { background: #0d1117; color: #c9d1d9; font-family: monospace; padding: 20px; max-width: 1000px; margin: 0 auto; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { background: #21262d; color: #c9d1d9; border: 1px solid #30363d; padding: 10px 20px; cursor: pointer; border-radius: 6px; font-weight: bold; }
+        .tab-btn.active { background: #4F6EF7; color: #fff; border-color: #4F6EF7; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
         .panel { border: 1px solid #30363d; padding: 20px; background: #161b22; margin-bottom: 20px; border-radius: 6px; }
         input, textarea, select { width: 100%; background: #0d1117; color: #fff; border: 1px solid #30363d; padding: 10px; margin: 5px 0 15px 0; box-sizing: border-box; }
-        button { background: #238636; color: #fff; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; font-weight: bold; }
-        button:hover { background: #2ea043; }
-        .dropzone { border: 2px dashed #30363d; padding: 20px; text-align: center; color: #8b949e; margin-bottom: 15px; }
-        .log { background: #000; padding: 10px; color: #0f0; height: 150px; overflow-y: scroll; font-size: 12px; }
+        button.action-btn { background: #238636; color: #fff; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        button.action-btn:hover { background: #2ea043; }
+        button.danger-btn { background: #da3633; color: #fff; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
+        .dropzone { border: 2px dashed #30363d; padding: 20px; text-align: center; color: #8b949e; margin-bottom: 15px; cursor: pointer; }
+        .log { background: #000; padding: 10px; color: #0f0; height: 150px; overflow-y: scroll; font-size: 12px; border: 1px solid #30363d; }
+        .faq-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; background: #0d1117; padding: 10px; border: 1px solid #30363d; }
     </style>
 </head>
 <body>
 
 <div class="panel">
-    <h3>1. Config (Saved Locally)</h3>
+    <h3>System Auth</h3>
     <input type="password" id="gh_pat" placeholder="GitHub PAT (github_pat_...)">
     <input type="text" id="gh_repo" value="murtuzag814/murtuzag814.github.io" placeholder="user/repo">
-    <button onclick="saveConfig()">Save Config</button>
+    <button class="action-btn" onclick="saveConfig()">Save Config</button>
 </div>
 
-<div class="panel">
-    <h3>2. Post Metadata</h3>
-    <label>Title</label><input type="text" id="p_title">
-    <label>Slug (URL)</label><input type="text" id="p_slug">
-    <label>Category</label><input type="text" id="p_category" value="Operations">
-    <label>Direct Answer (GEO Snippet - max 60 words)</label>
-    <textarea id="p_direct" rows="3"></textarea>
-    
-    <label>Cover Image (Optional)</label>
-    <div class="dropzone" id="dz_cover">Drag & Drop Cover Image Here</div>
-    <input type="hidden" id="cover_b64">
+<div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('blog')">Write Blog Post</button>
+    <button class="tab-btn" onclick="switchTab('home-faqs'); loadGlobalFaqs();">Manage Homepage FAQs</button>
 </div>
 
-<div class="panel">
-    <h3>3. Content Builder</h3>
-    <div id="sections"></div>
-    <button onclick="addSection()">+ Add Section</button>
+<!-- TAB 1: BLOG PUBLISHER -->
+<div id="blog" class="tab-content active">
+    <div class="panel">
+        <h3>Post Metadata</h3>
+        <label>Title</label><input type="text" id="p_title">
+        <label>Slug (URL)</label><input type="text" id="p_slug">
+        <label>Category</label><input type="text" id="p_category" value="Operations">
+        <label>Direct Answer (GEO Snippet - max 60 words)</label>
+        <textarea id="p_direct" rows="3"></textarea>
+        <label>Cover Image (Optional)</label>
+        <div class="dropzone" id="dz_cover">Drag & Drop Cover Image Here</div>
+        <input type="hidden" id="cover_b64">
+    </div>
+
+    <div class="panel">
+        <h3>Content Builder</h3>
+        <div id="sections"></div>
+        <button class="action-btn" style="background:#30363d;" onclick="addSection()">+ Add Section</button>
+    </div>
+
+    <div class="panel">
+        <h3>Common Questions Asked (Blog Specific)</h3>
+        <p style="font-size:12px; color:#8b949e;">These will appear at the bottom of the blog and generate Google FAQ Schema.</p>
+        <div id="blog_faqs"></div>
+        <button class="action-btn" style="background:#30363d;" onclick="addBlogFaq()">+ Add Question</button>
+    </div>
+
+    <button class="action-btn" onclick="publishPost()" style="width: 100%; font-size: 18px; padding: 15px;">🚀 PUBLISH BLOG TO GITHUB</button>
 </div>
 
-<button onclick="publishPost()" style="width: 100%; font-size: 18px; padding: 15px;">🚀 PUBLISH TO GITHUB</button>
+<!-- TAB 2: HOMEPAGE FAQ MANAGER -->
+<div id="home-faqs" class="tab-content">
+    <div class="panel">
+        <h3>Homepage: Common Questions Asked</h3>
+        <p style="font-size:12px; color:#8b949e;">Edit the global FAQs displayed on index.html</p>
+        <div id="global_faqs_container">Loading from GitHub...</div>
+        <button class="action-btn" style="background:#30363d; margin-top:15px;" onclick="addGlobalFaq()">+ Add New Question</button>
+        <hr style="border-color:#30363d; margin:20px 0;">
+        <button class="action-btn" onclick="saveGlobalFaqs()" style="width: 100%; font-size: 18px; padding: 15px;">💾 SAVE FAQS TO GITHUB</button>
+    </div>
+</div>
 
 <div class="panel" style="margin-top:20px;">
     <h3>Execution Log</h3>
@@ -51,11 +84,19 @@
 
 <script>
     function log(msg) { document.getElementById('log').innerHTML += msg + '<br>'; }
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.target.classList.add('active');
+    }
+
     function saveConfig() {
         localStorage.setItem('gh_pat', document.getElementById('gh_pat').value);
         localStorage.setItem('gh_repo', document.getElementById('gh_repo').value);
         log("Config saved to localStorage.");
     }
+
     window.onload = () => {
         if(localStorage.getItem('gh_pat')) document.getElementById('gh_pat').value = localStorage.getItem('gh_pat');
         if(localStorage.getItem('gh_repo')) document.getElementById('gh_repo').value = localStorage.getItem('gh_repo');
@@ -78,12 +119,13 @@
         };
     }
 
+    /* --- BLOG BUILDER LOGIC --- */
     let sectionCount = 0;
     function addSection() {
         sectionCount++;
         const div = document.createElement('div');
         div.innerHTML = `
-            <hr style="border-color:#30363d; margin: 20px 0;">
+            <hr style="border-color:#30363d; margin: 15px 0;">
             <select id="h_type_${sectionCount}"><option value="h2">H2</option><option value="h3">H3</option></select>
             <input type="text" id="h_text_${sectionCount}" placeholder="Heading">
             <textarea id="p_text_${sectionCount}" rows="5" placeholder="Body content..."></textarea>
@@ -94,13 +136,28 @@
         setupDropzone(document.getElementById(`dz_${sectionCount}`), `img_${sectionCount}`);
     }
 
+    let blogFaqCount = 0;
+    function addBlogFaq() {
+        blogFaqCount++;
+        const div = document.createElement('div');
+        div.className = 'faq-row';
+        div.id = `b_faq_row_${blogFaqCount}`;
+        div.innerHTML = `
+            <div style="flex-grow:1;">
+                <input type="text" id="b_faq_q_${blogFaqCount}" placeholder="Question">
+                <textarea id="b_faq_a_${blogFaqCount}" rows="2" placeholder="Answer"></textarea>
+            </div>
+            <button class="danger-btn" onclick="document.getElementById('b_faq_row_${blogFaqCount}').remove()">X</button>
+        `;
+        document.getElementById('blog_faqs').appendChild(div);
+    }
+
     async function ghFetch(path, method, body = null) {
         const repo = document.getElementById('gh_repo').value;
         const pat = document.getElementById('gh_pat').value;
         const opts = { method, headers: { 'Authorization': `Bearer ${pat}`, 'Content-Type': 'application/json' } };
         if(body) opts.body = JSON.stringify(body);
-        const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, opts);
-        return res;
+        return await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, opts);
     }
 
     async function publishPost() {
@@ -111,7 +168,6 @@
 
         log(`Starting build process for: ${slug}`);
 
-        // 1. Upload Cover Image (If exists)
         const coverB64 = document.getElementById('cover_b64').value;
         let thumbUrl = "";
         if(coverB64) {
@@ -120,7 +176,6 @@
             thumbUrl = `/posts/images/${slug}-cover.jpg`;
         }
 
-        // 2. Build HTML Body with Embedded CSS
         const cssBlock = `
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;800&family=DM+Sans:wght@400;500&display=swap');
@@ -134,10 +189,13 @@
             h3 { font-family: 'Sora', sans-serif; font-size: 1.3rem; margin-top: 30px; color: var(--white); }
             p { margin-bottom: 20px; color: var(--white-70); font-size: 1.05rem; }
             .meta { color: var(--white-45); font-size: 0.9rem; margin-bottom: 40px; display: block; }
-            .geo-box { background: var(--surface-2); padding: 25px; border-left: 4px solid var(--accent); border-radius: 8px; margin: 30px 0; border: 1px solid var(--border); border-left-width: 4px; }
+            .geo-box { background: var(--surface-2); padding: 25px; border-left: 4px solid var(--accent); border-radius: 8px; margin: 30px 0; border: 1px solid var(--border); }
             .geo-box strong { display: block; margin-bottom: 10px; color: var(--accent); font-family: 'Sora', sans-serif; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
             figure { margin: 40px 0; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
             img { width: 100%; height: auto; display: block; }
+            details { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; padding: 15px; }
+            summary { font-family: 'Sora', sans-serif; font-weight: 600; cursor: pointer; color: var(--white); outline: none; }
+            details p { margin: 15px 0 0 0; font-size: 0.95rem; }
         </style>`;
 
         let bodyHtml = `
@@ -149,13 +207,13 @@
         `;
         
         for(let i=1; i<=sectionCount; i++) {
+            if(!document.getElementById(`h_type_${i}`)) continue;
             const hType = document.getElementById(`h_type_${i}`).value;
             const hText = document.getElementById(`h_text_${i}`).value;
             const pText = document.getElementById(`p_text_${i}`).value;
             const imgB64 = document.getElementById(`img_${i}`).value;
             
             bodyHtml += `<${hType}>${hText}</${hType}>\n<p>${pText.replace(/\n/g, '<br>')}</p>\n`;
-            
             if(imgB64) {
                 const imgPath = `posts/images/${slug}-${i}.jpg`;
                 log(`Uploading section ${i} image...`);
@@ -163,15 +221,36 @@
                 bodyHtml += `<figure><img src="/${imgPath}" loading="lazy" alt="${hText}"></figure>\n`;
             }
         }
+
+        // Process Blog FAQs & Schema
+        let schemaFaq = { "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [] };
+        let faqHtml = '';
+        
+        for(let i=1; i<=blogFaqCount; i++) {
+            if(!document.getElementById(`b_faq_q_${i}`)) continue;
+            const q = document.getElementById(`b_faq_q_${i}`).value;
+            const a = document.getElementById(`b_faq_a_${i}`).value;
+            if(q && a) {
+                faqHtml += `<details><summary>${q}</summary><p>${a}</p></details>`;
+                schemaFaq.mainEntity.push({ "@type": "Question", "name": q, "acceptedAnswer": { "@type": "Answer", "text": a } });
+            }
+        }
+
+        if(faqHtml !== '') {
+            bodyHtml += `<h2>Common questions asked</h2><div style="margin-top:20px;">${faqHtml}</div>`;
+        }
         bodyHtml += `</div>`; // Close container
 
-        const fullHtml = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${title}</title><meta name="description" content="${direct}">${cssBlock}</head><body>${bodyHtml}</body></html>`;
+        let headContent = `<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${title}</title><meta name="description" content="${direct}">${cssBlock}`;
+        if(schemaFaq.mainEntity.length > 0) {
+            headContent += `<script type="application/ld+json">${JSON.stringify(schemaFaq)}<\/script>`;
+        }
 
-        // 3. Upload HTML File
+        const fullHtml = `<!DOCTYPE html><html lang="en"><head>${headContent}</head><body>${bodyHtml}</body></html>`;
+
         log("Compiling and uploading HTML file...");
         await ghFetch(`posts/${slug}.html`, 'PUT', { message: `Publish ${slug}`, content: btoa(unescape(encodeURIComponent(fullHtml))) });
 
-        // 4. Update posts.json
         log("Updating posts.json registry...");
         const getRegistry = await ghFetch('posts.json', 'GET');
         let registryData = [];
@@ -182,16 +261,76 @@
             sha = data.sha;
         }
         
-        // Remove existing post if it has the same slug to prevent duplicates when updating
         registryData = registryData.filter(p => p.slug !== slug);
-        
         registryData.unshift({ title, slug, date, category: document.getElementById('p_category').value, excerpt: direct, thumbnail: thumbUrl });
         
         const updatePayload = { message: `Update posts.json with ${slug}`, content: btoa(unescape(encodeURIComponent(JSON.stringify(registryData, null, 2)))) };
         if(sha) updatePayload.sha = sha;
         await ghFetch('posts.json', 'PUT', updatePayload);
 
-        log("✅ PUBLISH COMPLETE. GitHub Pages is building. Live in ~60 seconds.");
+        log("✅ PUBLISH COMPLETE. Live in ~60 seconds.");
+    }
+
+    /* --- GLOBAL FAQ MANAGER LOGIC --- */
+    let globalFaqSha = null;
+    let globalFaqs = [];
+
+    async function loadGlobalFaqs() {
+        document.getElementById('global_faqs_container').innerHTML = "Fetching faqs.json from GitHub...";
+        const res = await ghFetch('faqs.json', 'GET');
+        if(res.ok) {
+            const data = await res.json();
+            globalFaqSha = data.sha;
+            globalFaqs = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+            renderGlobalFaqs();
+            log("Loaded global FAQs.");
+        } else {
+            document.getElementById('global_faqs_container').innerHTML = "faqs.json not found in repository.";
+        }
+    }
+
+    function renderGlobalFaqs() {
+        const container = document.getElementById('global_faqs_container');
+        container.innerHTML = '';
+        globalFaqs.forEach((faq, index) => {
+            container.innerHTML += `
+                <div class="faq-row" id="g_faq_${index}">
+                    <div style="flex-grow:1;">
+                        <input type="text" id="g_q_${index}" value="${faq.q}" onchange="globalFaqs[${index}].q = this.value">
+                        <textarea id="g_a_${index}" rows="3" onchange="globalFaqs[${index}].a = this.value">${faq.a}</textarea>
+                    </div>
+                    <button class="danger-btn" onclick="removeGlobalFaq(${index})">X</button>
+                </div>
+            `;
+        });
+    }
+
+    function addGlobalFaq() {
+        globalFaqs.push({ q: "New Question?", a: "Answer here..." });
+        renderGlobalFaqs();
+    }
+
+    function removeGlobalFaq(index) {
+        globalFaqs.splice(index, 1);
+        renderGlobalFaqs();
+    }
+
+    async function saveGlobalFaqs() {
+        log("Saving global FAQs to GitHub...");
+        const payload = { 
+            message: "Update global FAQs via Studio", 
+            content: btoa(unescape(encodeURIComponent(JSON.stringify(globalFaqs, null, 2)))) 
+        };
+        if(globalFaqSha) payload.sha = globalFaqSha;
+        
+        const res = await ghFetch('faqs.json', 'PUT', payload);
+        if(res.ok) {
+            const data = await res.json();
+            globalFaqSha = data.content.sha;
+            log("✅ FAQS SAVED. Index.html will update in ~60s.");
+        } else {
+            log("❌ Error saving FAQs.");
+        }
     }
 </script>
 </body>
