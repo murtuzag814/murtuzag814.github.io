@@ -1336,7 +1336,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const track = document.getElementById('dynamic-blog-track');
     if (track) {
         try {
-            const res = await fetch('/posts.json?t=' + new Date().getTime());
+            const res = await fetch('posts.json?t=' + new Date().getTime());
             if(!res.ok) throw new Error("No posts.json found");
             const posts = await res.json();
             
@@ -1349,7 +1349,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             posts.forEach(post => {
                 const imgTag = post.thumbnail ? `<img src="${post.thumbnail}" loading="lazy" alt="${post.title}">` : `<div style="height:160px; background:var(--surface-2);"></div>`;
                 html += `
-                <a href="/posts/${post.slug}.html" class="blog-card">
+                <a href="${post.slug.startsWith('posts/') ? post.slug : 'posts/' + post.slug}.html" class="blog-card">
                     ${imgTag}
                     <div class="blog-card-content">
                         <span class="blog-badge">${post.category || 'Operations'}</span>
@@ -1363,6 +1363,31 @@ document.addEventListener("DOMContentLoaded", async () => {
         } catch (e) {
             console.error("Error loading posts:", e);
             track.innerHTML = '<p style="color:var(--accent-3); padding: 1rem;">Setup required: Please publish your first post via Studio.</p>';
+        }
+    }
+});
+
+// Dynamic FAQ Fetch
+document.addEventListener("DOMContentLoaded", async () => {
+    const faqContainer = document.getElementById('dynamic-faq-container');
+    if (faqContainer) {
+        try {
+            const res = await fetch('faqs.json?t=' + new Date().getTime());
+            if(!res.ok) throw new Error("No faqs.json found");
+            const faqs = await res.json();
+            
+            let html = '';
+            faqs.forEach((faq, i) => {
+                // 'reveal' class removed so elements do not get stuck at opacity:0
+                html += `
+                <details class="faq-item" ${i===0 ? 'open' : ''}>
+                    <summary class="faq-q">${faq.q}</summary>
+                    <p class="faq-a">${faq.a}</p>
+                </details>`;
+            });
+            faqContainer.innerHTML = html;
+        } catch (e) {
+            console.error("Error loading FAQs:", e);
         }
     }
 });
