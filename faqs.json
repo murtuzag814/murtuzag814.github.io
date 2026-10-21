@@ -6,5 +6,9 @@
   {
     "q": "How do you reduce RTO for Pakistani fashion brands?",
     "a": "RTO reduction requires operational fixes before dispatch: address verification at checkout, automated pre-delivery confirmation, and dynamic COD capping based on customer history."
+  },
+  {
+    "q": "How to manange couriers in pakistan.",
+    "a": "I can help you build a proper courier-management system for Pakistan, where your orders are assigned to the right courier, COD payments are tracked and reconciled, failed deliveries and RTOs are actively followed up, and courier performance is monitored. The goal is to reduce delivery issues and RTO losses while giving you clear visibility over your shipments and cash."
   }
 ]
