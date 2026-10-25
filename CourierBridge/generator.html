@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>City Dictionary Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body style="font-family: sans-serif; padding: 40px;">
+    <h2>Drop "city codes.csv" here to generate cities.js</h2>
+    <input type="file" id="csvFile" accept=".csv" />
+    <textarea id="output" style="width: 100%; height: 400px; margin-top: 20px;"></textarea>
+
+    <script>
+        const commonAliases = {
+            "khi": "karachi", "krachi": "karachi", "karachi city": "karachi",
+            "lhr": "lahore", "lahor": "lahore",
+            "isb": "islamabad", "isl": "islamabad",
+            "rwp": "rawalpindi", "pindi": "rawalpindi",
+            "fsd": "faisalabad", "faislabad": "faisalabad",
+            "mul": "multan",
+            "hyd": "hyderabad",
+            "pew": "peshawar", "psh": "peshawar",
+            "qta": "quetta",
+            "ryk": "rahim yar khan",
+            "gjw": "gujranwala",
+            "skt": "sialkot"
+        };
+
+        document.getElementById('csvFile').addEventListener('change', function(e) {
+            Papa.parse(e.target.files[0], {
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    let dict = {};
+                    
+                    // 1. Load official cities
+                    results.data.forEach(row => {
+                        if (!row.City) return;
+                        let cleanCity = row.City.toLowerCase().trim();
+                        dict[cleanCity] = {
+                            official: row.City.toUpperCase().trim(),
+                            trax: parseFloat(row.Trax) || 0,
+                            leopards: parseFloat(row.Leopards) || 0,
+                            tcs: (row.TCS && row.TCS !== 'nan') ? row.TCS.trim().toUpperCase() : null
+                        };
+                    });
+
+                    // 2. Inject Aliases (pointing to official data)
+                    for (const [alias, officialTarget] of Object.entries(commonAliases)) {
+                        if (dict[officialTarget]) {
+                            dict[alias] = dict[officialTarget]; 
+                        }
+                    }
+
+                    // 3. Output the JS file content
+                    const fileContent = `// js/cities.js\nconst cityDictionary = ${JSON.stringify(dict, null, 4)};\n\n` + 
+                    `function resolveCity(rawCity, targetCourier) {
+    let cleanCity = (rawCity || '').toLowerCase().trim();
+    let cityData = cityDictionary[cleanCity];
+
+    if (!cityData) {
+        return { status: 'error', errorMsg: \`City "\${rawCity}" not found.\` };
+    }
+
+    let courierCode = cityData[targetCourier];
+    
+    if (!courierCode || courierCode === 0 || courierCode === '0.0') {
+        let alts = [];
+        if (cityData.trax) alts.push('Trax');
+        if (cityData.leopards) alts.push('Leopards');
+        if (cityData.tcs) alts.push('TCS');
+        return { status: 'unserviceable', errorMsg: \`"\${cityData.official}" is not serviced by \${targetCourier}. Try: \${alts.join(', ') || 'None'}\` };
+    }
+
+    return { status: 'success', officialName: cityData.official, code: courierCode };
+}`;
+                    document.getElementById('output').value = fileContent;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
