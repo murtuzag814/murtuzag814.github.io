@@ -6,13 +6,15 @@ const courierSchemas = {
         title: 'Trax Regular Settings',
         keys: ['pickupAddressId', 'modeOfShipmentId'],
         labels: ['Pickup Address ID (e.g. 569518)', 'Shipping Mode ID (e.g. 1)'],
-        defaults: ['', '1']
+        defaults: ['', '1'],
+        adapterFile: './traxRegularAdapter.js' // Explicit file mapping
     },
     'trax_reverse': {
         title: 'Trax Reverse Settings',
         keys: ['pickupAddressId', 'modeOfShipmentId'],
         labels: ['Pickup Address ID (e.g. 569518)', 'Shipping Mode ID (e.g. 1)'],
-        defaults: ['', '1']
+        defaults: ['', '1'],
+        adapterFile: './traxReverseAdapter.js' // Explicit file mapping
     },
     'tcs_regular': {
         title: 'TCS Regular Settings',
@@ -21,9 +23,11 @@ const courierSchemas = {
             'Service Type (O=Overnight, S=Same Day, OLE=Overland, MYO=MyCollect)', 
             'Fragile (Yes/No)'
         ],
-        defaults: ['O', 'No']
+        defaults: ['O', 'No'],
+        adapterFile: './tcs_regularAdapter.js' // Explicit file mapping
     }
 };
+
 // --- 2. MODAL GATEKEEPER LOGIC ---
 const modal = document.getElementById('settingsModal');
 let currentConfigTarget = null;
@@ -83,7 +87,7 @@ document.getElementById('settingsBtn').addEventListener('click', () => {
 document.getElementById('generateBookingBtn').addEventListener('click', async () => {
     const fileInput = document.getElementById('shopifyCsv');
     const selectedOption = document.getElementById('courierSelect').value; // e.g. "tcs_regular"
-    const [courierPrefix, shipmentType] = selectedOption.split('_'); // "tcs", "regular"
+    const [courierPrefix] = selectedOption.split('_'); // "tcs", "trax"
     
     if (!fileInput.files.length) {
         return alert("Please drop your Shopify CSV file first.");
@@ -92,7 +96,6 @@ document.getElementById('generateBookingBtn').addEventListener('click', async ()
     const file = fileInput.files[0];
 
     // Step 1: Pre-Flight Check (Fails Fast if not a Shopify CSV)
-    // We check the file extension and rely on PapaParse headers later.
     if (!file.name.toLowerCase().endsWith('.csv')) {
         return alert("Invalid file format. Please upload the raw Shopify CSV export.");
     }
@@ -103,6 +106,8 @@ document.getElementById('generateBookingBtn').addEventListener('click', async ()
         showSettingsModal(selectedOption);
         return; // Halt execution until they save settings
     }
+
+    const schema = courierSchemas[selectedOption];
 
     // Step 3 & 4: Universal Parsing & Dynamic Adapter
     Papa.parse(file, {
@@ -121,14 +126,13 @@ document.getElementById('generateBookingBtn').addEventListener('click', async ()
                 return alert("No valid orders could be generated. Check city spelling or file data.");
             }
 
-            // Step 4: Dynamically load and execute the required "dumb" adapter
+            // Step 4: Dynamically load and execute the required adapter using the explicit file path
             try {
-                // Dynamically imports e.g., js/tcs_regularAdapter.js
-                const adapter = await import(`./${selectedOption}Adapter.js`);
+                const adapter = await import(schema.adapterFile);
                 adapter.generateExcel(normalizedOrders, config);
             } catch (error) {
                 console.error(error);
-                alert(`Error loading the adapter for ${selectedOption}. Make sure the file exists.`);
+                alert(`Error loading the adapter file (${schema.adapterFile}). Make sure it is uploaded to your GitHub repository.`);
             }
         },
         error: function() {
