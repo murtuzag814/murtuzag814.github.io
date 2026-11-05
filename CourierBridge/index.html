@@ -30,6 +30,7 @@
                     <option value="trax_regular">Trax - Regular Shipment</option>
                     <option value="trax_reverse">Trax - Reverse Pickup</option>
                     <option value="tcs_regular">TCS - Regular Shipment</option>
+                    <option value="leopards_regular">Leopards - Regular Shipment</option>
                 </select>
             </div>
 
@@ -59,20 +60,20 @@
     </div>
 
     <!-- DYNAMIC SETTINGS MODAL -->
-    <div id="settingsModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
-        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+    <div id="settingsModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-96 max-h-[90vh] overflow-y-auto">
             <h2 id="modalTitle" class="text-lg font-bold mb-4">Settings</h2>
-            <div id="modalBody" class="space-y-4 mb-4">
+            <div id="modalBody" class="space-y-4 mb-6">
                 <!-- Inputs injected dynamically via app.js -->
             </div>
             <div class="flex justify-end space-x-2">
-                <button id="closeModalBtn" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
-                <button id="saveModalBtn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Save Config</button>
+                <button id="closeModalBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 text-sm font-semibold">Cancel</button>
+                <button id="saveModalBtn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm font-semibold">Save Config</button>
             </div>
         </div>
     </div>
 
-    <!-- Scripts (Adapters removed for dynamic loading) -->
+    <!-- Core Scripts Only (Adapters load dynamically via app.js) -->
     <script src="js/cities.js"></script>
     <script src="js/parser.js"></script>
     <script src="js/app.js"></script>
