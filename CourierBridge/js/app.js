@@ -1,20 +1,20 @@
 // js/app.js
 
-// --- 1. CONFIGURATION SCHEMA ---
+// --- 1. CONFIGURATION SCHEMAS ---
 const courierSchemas = {
     'trax_regular': {
         title: 'Trax Regular Settings',
         keys: ['pickupAddressId', 'modeOfShipmentId'],
         labels: ['Pickup Address ID (e.g. 569518)', 'Shipping Mode ID (e.g. 1)'],
         defaults: ['', '1'],
-        adapterFile: './traxRegularAdapter.js' // Explicit file mapping
+        adapterFile: './traxRegularAdapter.js'
     },
     'trax_reverse': {
         title: 'Trax Reverse Settings',
         keys: ['pickupAddressId', 'modeOfShipmentId'],
         labels: ['Pickup Address ID (e.g. 569518)', 'Shipping Mode ID (e.g. 1)'],
         defaults: ['', '1'],
-        adapterFile: './traxReverseAdapter.js' // Explicit file mapping
+        adapterFile: './traxReverseAdapter.js'
     },
     'tcs_regular': {
         title: 'TCS Regular Settings',
@@ -24,7 +24,20 @@ const courierSchemas = {
             'Fragile (Yes/No)'
         ],
         defaults: ['O', 'No'],
-        adapterFile: './tcs_regularAdapter.js' // Explicit file mapping
+        adapterFile: './tcs_regularAdapter.js'
+    },
+    'leopards_regular': {
+        title: 'Leopards Regular Settings',
+        keys: ['shipperName', 'shipperPhone', 'shipperAddress', 'originCity', 'shipmentType'],
+        labels: [
+            'Shipper / Brand Name', 
+            'Shipper Phone (e.g. 03000000000)', 
+            'Warehouse Address', 
+            'Origin City (e.g. karachi)', 
+            'Shipment Type (overnight / overland / detain)'
+        ],
+        defaults: ['My Brand', '03000000000', 'Warehouse Address', 'karachi', 'overnight'],
+        adapterFile: './leopardsAdapter.js'
     }
 };
 
@@ -44,14 +57,14 @@ function showSettingsModal(courierType) {
 
     document.getElementById('modalTitle').innerText = schema.title;
     const modalBody = document.getElementById('modalBody');
-    modalBody.innerHTML = ''; // Clear previous
+    modalBody.innerHTML = ''; // Clear previous fields
 
     schema.keys.forEach((key, index) => {
         const value = existingConfig[key] || schema.defaults[index];
         modalBody.innerHTML += `
             <div>
                 <label class="block text-sm font-bold mb-1">${schema.labels[index]}</label>
-                <input type="text" id="config_${key}" class="w-full border p-2 rounded" value="${value}">
+                <input type="text" id="config_${key}" class="w-full border p-2 rounded text-sm" value="${value}">
             </div>
         `;
     });
@@ -86,8 +99,8 @@ document.getElementById('settingsBtn').addEventListener('click', () => {
 // --- 3. THE 4-STEP PIPELINE (FORWARD FLOW) ---
 document.getElementById('generateBookingBtn').addEventListener('click', async () => {
     const fileInput = document.getElementById('shopifyCsv');
-    const selectedOption = document.getElementById('courierSelect').value; // e.g. "tcs_regular"
-    const [courierPrefix] = selectedOption.split('_'); // "tcs", "trax"
+    const selectedOption = document.getElementById('courierSelect').value;
+    const [courierPrefix] = selectedOption.split('_'); // 'trax', 'tcs', 'leopards'
     
     if (!fileInput.files.length) {
         return alert("Please drop your Shopify CSV file first.");
@@ -95,7 +108,7 @@ document.getElementById('generateBookingBtn').addEventListener('click', async ()
 
     const file = fileInput.files[0];
 
-    // Step 1: Pre-Flight Check (Fails Fast if not a Shopify CSV)
+    // Step 1: Pre-Flight File Format Check
     if (!file.name.toLowerCase().endsWith('.csv')) {
         return alert("Invalid file format. Please upload the raw Shopify CSV export.");
     }
@@ -104,7 +117,7 @@ document.getElementById('generateBookingBtn').addEventListener('click', async ()
     const config = getCourierConfig(selectedOption);
     if (!config) {
         showSettingsModal(selectedOption);
-        return; // Halt execution until they save settings
+        return; // Halt execution until settings are saved
     }
 
     const schema = courierSchemas[selectedOption];
@@ -114,25 +127,25 @@ document.getElementById('generateBookingBtn').addEventListener('click', async ()
         header: true,
         skipEmptyLines: true,
         complete: async function(results) {
-            // Validate it's actually Shopify data
+            // Validate it's a valid Shopify export
             if (!results.data[0].hasOwnProperty('Name') || !results.data[0].hasOwnProperty('Lineitem quantity')) {
                 return alert("This doesn't look like a Shopify Export CSV. Missing required columns.");
             }
 
-            // Step 3: Run the universal engine
+            // Step 3: Run the universal parser
             const normalizedOrders = parseShopifyOrders(results.data, courierPrefix);
 
             if (normalizedOrders.length === 0) {
                 return alert("No valid orders could be generated. Check city spelling or file data.");
             }
 
-            // Step 4: Dynamically load and execute the required adapter using the explicit file path
+            // Step 4: Dynamically import and execute the isolated adapter
             try {
                 const adapter = await import(schema.adapterFile);
                 adapter.generateExcel(normalizedOrders, config);
             } catch (error) {
                 console.error(error);
-                alert(`Error loading the adapter file (${schema.adapterFile}). Make sure it is uploaded to your GitHub repository.`);
+                alert(`Error loading adapter (${schema.adapterFile}). Verify the file exists in your repository.`);
             }
         },
         error: function() {
