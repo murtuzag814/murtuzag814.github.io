@@ -39,6 +39,19 @@ const courierSchemas = {
         defaults: ['My Brand', '03000000000', 'Warehouse Address', 'karachi', 'overnight'],
         adapterFile: './leopardsAdapter.js'
     }
+
+// Add 'mnp_regular' into your courierSchemas object in js/app.js:
+    'mnp_regular': {
+        title: 'M&P Regular Settings',
+        keys: ['serviceType', 'specialHandling'],
+        labels: [
+            'Service Type (e.g. O for Overnight)', 
+            'Special Handling (Yes/No)'
+        ],
+        defaults: ['O', 'No'],
+        adapterFile: './mnpAdapter.js'
+    }
+
 };
 
 // --- 2. MODAL GATEKEEPER LOGIC ---
