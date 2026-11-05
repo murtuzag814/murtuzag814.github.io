@@ -50,7 +50,7 @@ function getCourierConfig(courierType) {
     return raw ? JSON.parse(raw) : null;
 }
 
-function showSettingsModal(courierType) {
+function showSettingsModal(courierType, onSaveCallback = null) {
     currentConfigTarget = courierType;
     const schema = courierSchemas[courierType];
     const existingConfig = getCourierConfig(courierType) || {};
@@ -69,6 +69,10 @@ function showSettingsModal(courierType) {
         `;
     });
 
+    // Attach callback temporarily if provided
+    modal.dataset.callback = onSaveCallback ? 'pending' : '';
+    modal.onSaveSuccess = onSaveCallback;
+
     modal.classList.remove('hidden');
 }
 
@@ -84,11 +88,20 @@ document.getElementById('saveModalBtn').addEventListener('click', () => {
 
     localStorage.setItem(`${currentConfigTarget}_config`, JSON.stringify(newConfig));
     modal.classList.add('hidden');
-    alert(`${schema.title} saved successfully. You can now generate your booking.`);
+    
+    // If a generation task was waiting for this config, execute it now
+    if (typeof modal.onSaveSuccess === 'function') {
+        const callback = modal.onSaveSuccess;
+        modal.onSaveSuccess = null;
+        callback(newConfig);
+    } else {
+        alert(`${schema.title} saved successfully.`);
+    }
 });
 
 document.getElementById('closeModalBtn').addEventListener('click', () => {
     modal.classList.add('hidden');
+    modal.onSaveSuccess = null;
 });
 
 document.getElementById('settingsBtn').addEventListener('click', () => {
@@ -97,10 +110,9 @@ document.getElementById('settingsBtn').addEventListener('click', () => {
 });
 
 // --- 3. THE 4-STEP PIPELINE (FORWARD FLOW) ---
-document.getElementById('generateBookingBtn').addEventListener('click', async () => {
+document.getElementById('generateBookingBtn').addEventListener('click', () => {
     const fileInput = document.getElementById('shopifyCsv');
     const selectedOption = document.getElementById('courierSelect').value;
-    const [courierPrefix] = selectedOption.split('_'); // 'trax', 'tcs', 'leopards'
     
     if (!fileInput.files.length) {
         return alert("Please drop your Shopify CSV file first.");
@@ -113,43 +125,48 @@ document.getElementById('generateBookingBtn').addEventListener('click', async ()
         return alert("Invalid file format. Please upload the raw Shopify CSV export.");
     }
 
-    // Step 2: Config Gatekeeper
-    const config = getCourierConfig(selectedOption);
+    // Execution function once config is verified
+    const executeBooking = (config) => {
+        const [courierPrefix] = selectedOption.split('_'); // 'trax', 'tcs', 'leopards'
+        const schema = courierSchemas[selectedOption];
+
+        Papa.parse(file, {
+            header: true,
+            skipEmptyLines: true,
+            complete: async function(results) {
+                if (!results.data[0].hasOwnProperty('Name') || !results.data[0].hasOwnProperty('Lineitem quantity')) {
+                    return alert("This doesn't look like a Shopify Export CSV. Missing required columns.");
+                }
+
+                const normalizedOrders = parseShopifyOrders(results.data, courierPrefix);
+
+                if (normalizedOrders.length === 0) {
+                    return alert("No valid orders could be generated. Check city spelling or file data.");
+                }
+
+                try {
+                    const adapter = await import(schema.adapterFile);
+                    adapter.generateExcel(normalizedOrders, config);
+                } catch (error) {
+                    console.error(error);
+                    alert(`Error loading adapter (${schema.adapterFile}). Verify the file exists.`);
+                }
+            },
+            error: function() {
+                alert("Failed to read the CSV file.");
+            }
+        });
+    };
+
+    // Step 2: Config Gatekeeper (Silent check)
+    let config = getCourierConfig(selectedOption);
     if (!config) {
-        showSettingsModal(selectedOption);
-        return; // Halt execution until settings are saved
+        // If config is missing, prompt the modal, then automatically trigger generation upon save
+        showSettingsModal(selectedOption, (savedConfig) => {
+            executeBooking(savedConfig);
+        });
+    } else {
+        // Config exists! Skip the modal completely and process immediately.
+        executeBooking(config);
     }
-
-    const schema = courierSchemas[selectedOption];
-
-    // Step 3 & 4: Universal Parsing & Dynamic Adapter
-    Papa.parse(file, {
-        header: true,
-        skipEmptyLines: true,
-        complete: async function(results) {
-            // Validate it's a valid Shopify export
-            if (!results.data[0].hasOwnProperty('Name') || !results.data[0].hasOwnProperty('Lineitem quantity')) {
-                return alert("This doesn't look like a Shopify Export CSV. Missing required columns.");
-            }
-
-            // Step 3: Run the universal parser
-            const normalizedOrders = parseShopifyOrders(results.data, courierPrefix);
-
-            if (normalizedOrders.length === 0) {
-                return alert("No valid orders could be generated. Check city spelling or file data.");
-            }
-
-            // Step 4: Dynamically import and execute the isolated adapter
-            try {
-                const adapter = await import(schema.adapterFile);
-                adapter.generateExcel(normalizedOrders, config);
-            } catch (error) {
-                console.error(error);
-                alert(`Error loading adapter (${schema.adapterFile}). Verify the file exists in your repository.`);
-            }
-        },
-        error: function() {
-            alert("Failed to read the CSV file.");
-        }
-    });
 });
