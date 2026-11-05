@@ -7,14 +7,14 @@ const courierSchemas = {
         keys: ['pickupAddressId', 'modeOfShipmentId'],
         labels: ['Pickup Address ID (e.g. 569518)', 'Shipping Mode ID (e.g. 1)'],
         defaults: ['', '1'],
-        adapterFile: './traxRegularAdapter.js'
+        adapterFile: './js/traxRegularAdapter.js'
     },
     'trax_reverse': {
         title: 'Trax Reverse Settings',
         keys: ['pickupAddressId', 'modeOfShipmentId'],
         labels: ['Pickup Address ID (e.g. 569518)', 'Shipping Mode ID (e.g. 1)'],
         defaults: ['', '1'],
-        adapterFile: './traxReverseAdapter.js'
+        adapterFile: './js/traxReverseAdapter.js'
     },
     'tcs_regular': {
         title: 'TCS Regular Settings',
@@ -24,7 +24,7 @@ const courierSchemas = {
             'Fragile (Yes/No)'
         ],
         defaults: ['O', 'No'],
-        adapterFile: './tcs_regularAdapter.js'
+        adapterFile: './js/tcs_regularAdapter.js'
     },
     'leopards_regular': {
         title: 'Leopards Regular Settings',
@@ -37,10 +37,8 @@ const courierSchemas = {
             'Shipment Type (overnight / overland / detain)'
         ],
         defaults: ['My Brand', '03000000000', 'Warehouse Address', 'karachi', 'overnight'],
-        adapterFile: './leopardsAdapter.js'
-    }
-
-// Add 'mnp_regular' into your courierSchemas object in js/app.js:
+        adapterFile: './js/leopardsAdapter.js'
+    },
     'mnp_regular': {
         title: 'M&P Regular Settings',
         keys: ['serviceType', 'specialHandling'],
@@ -49,9 +47,8 @@ const courierSchemas = {
             'Special Handling (Yes/No)'
         ],
         defaults: ['O', 'No'],
-        adapterFile: './mnpAdapter.js'
+        adapterFile: './js/mnpAdapter.js'
     }
-
 };
 
 // --- 2. MODAL GATEKEEPER LOGIC ---
@@ -140,7 +137,7 @@ document.getElementById('generateBookingBtn').addEventListener('click', () => {
 
     // Execution function once config is verified
     const executeBooking = (config) => {
-        const [courierPrefix] = selectedOption.split('_'); // 'trax', 'tcs', 'leopards'
+        const [courierPrefix] = selectedOption.split('_'); // 'trax', 'tcs', 'leopards', 'mnp'
         const schema = courierSchemas[selectedOption];
 
         Papa.parse(file, {
@@ -174,12 +171,10 @@ document.getElementById('generateBookingBtn').addEventListener('click', () => {
     // Step 2: Config Gatekeeper (Silent check)
     let config = getCourierConfig(selectedOption);
     if (!config) {
-        // If config is missing, prompt the modal, then automatically trigger generation upon save
         showSettingsModal(selectedOption, (savedConfig) => {
             executeBooking(savedConfig);
         });
     } else {
-        // Config exists! Skip the modal completely and process immediately.
         executeBooking(config);
     }
 });
